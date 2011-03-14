@@ -11,6 +11,11 @@ task :racket do
 	end
 end
 
+desc "Test the grid file."
+task :test_grid do
+	gracket "test/grid.rkt"
+end
+
 desc "Run solumns"
 task :solumns do
 	gracket "solumns/main.rkt"
