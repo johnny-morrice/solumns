@@ -5,10 +5,9 @@
 (provide colgorithm/c)
 
 ; Colgorithms are objects which provide an algorithm
-; for determining the next column, given a matrix.
+; for determining the next column, given a grid%.
 (define colgorithm/c
-  (class/c [next (->m grid? 
-		      exact-nonnegative-integer?
+  (class/c [next (->m (is-a?/c grid%) 
 		      column?)]))
 
 

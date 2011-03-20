@@ -1,7 +1,6 @@
 #lang racket
 
-(provide grid%
-	 column?)
+(provide grid%)
 
 ; A column is a vector of length 3, containing exact integers.
 (define column?
@@ -10,6 +9,14 @@
 			 (and (vector? candidate)
 			      (= (vector-length candidate) 3)
 			      ((vectorof exact-nonnegative-integer?) candidate)))))
+
+; Produce the next arrangement of a column, like when the player presses up.
+(define (column-shift col)
+  (let [(next (vector 0 0 0))]
+    (vector-set! next 0 (vector-ref col 1))
+    (vector-set! next 1 (vector-ref col 2))
+    (vector-set! next 2 (vector-ref col 0))
+    next))
 
 ; A grid of blocks present on the screen.
 (define/contract grid%
@@ -22,24 +29,44 @@
 	   [add-column (->m exact-nonnegative-integer?
 			    exact-nonnegative-integer?
 			    column?
-			    void)])
+			    void)]
+	   [clone (->m (is-a?/c grid%))]
+	   [size (->m exact-nonnegative-integer?)]
+	   [reduce (->m void)])
 
   (class object%
 	 (super-new)
 	 (init-field width height)
+
 	 (field [matrix
 		  (build-vector width
 				(lambda (i) (build-vector height
-							  (lambda (j) #f))))])
+							  (lambda (j) #f))))]
+		[lost #f])
 
-	 (public gravity elimination-step add-column visit-squares find-neighbours all-colours)
+	 (public gravity elimination-step add-column visit-squares find-neighbours all-colours clone lost?
+		 size reduce matrix-set!)
+
+	 ; Have we lost?
+	 (define (lost?)
+	   lost)
+
+	 ; Clone this grid.
+	 (define (clone)
+	   (let [(gen (new grid%
+			   [width width]
+			   [height height]))]
+	     (visit-squares
+	       (lambda (x y c)
+		 (send gen matrix-set! x y c)))
+	     gen))
 
 	 ; Is this coordinate in the matrix?
-	 (define (in-matrix? coord)
-	   (and (>= (car coord) 0)
-		(>= (cadr coord) 0)
-	        (< (car coord) width)
-		(< (cadr coord) height)))
+	 (define (in-matrix? x y)
+	   (and (>= x 0)
+		(>= y 0)
+	        (< x width)
+		(< y height)))
 
 	 (define (all-colours)
 	   (visit-squares
@@ -57,7 +84,9 @@
 
 	   ; Set an element in the grid's matrix
 	   (define (matrix-set! x y val)
-	     (vector-set! (vector-ref matrix x) y val))
+	     (if (in-matrix? x y)
+	       (vector-set! (vector-ref matrix x) y val)
+	       (set! lost #t)))
 
 	 ; Removes neighbours from the matrix, given a set of points.
 	 ; Returns true if neighbours were removed
@@ -78,7 +107,8 @@
 	 ; Find a set of neighbours and a new set of unreached values, given a list of currently joined squares and a set of unreached neighbours
 	 (define (find-neighbours reached unreached)
 	   (let* [(candidates (apply set
-				     (filter in-matrix?
+				     (filter (lambda (pos)
+					       (apply in-matrix? pos))
 					     (for*/list [(square reached)
 							 (xd (in-range -1 2))
 							 (yd (in-range -1 2))]
@@ -89,6 +119,18 @@
 	       (values reached unreached)
 	       (find-neighbours (set-union reached present)
 				(set-subtract unreached candidates)))))
+
+	 ; Return the number of filled squares in the grid
+	 (define (size)
+	   (apply +
+		  (flatten (visit-squares (lambda (x y c)
+					    (if c 1 0))))))
+
+	 ; Perform elimination and gravity steps until there is no change!
+	 (define (reduce)
+	   (do []
+	     [(not (elimination-step)) (void)]
+	     (gravity)))
 
 	 ; Apply a single step of elimination to a grid (that is, removal of congruent elements)
 	 ; Return true if squares were eliminated, false otherwise.
@@ -124,5 +166,26 @@
 				(j (in-range 0 (vector-length col)))]
 			       (visitor i j square))))))
 
+; Take two grids, rank one higher than another.  Lower value means better for the player.
+; Ranks by height, then by number of squares overall.  If a grid is out of bounds
+; (the player has lost) then it is higher.
+(define (grid-lt p q)
+  (local
+    [(define (grid-height g)
+       (apply max (flatten (send g visit-squares
+				 (lambda (x y c)
+				   (if c y 0))))))]
+    (let [(smaller (< (send p size)
+		      (send q size)))
+	  (shorter (< (grid-height p)
+		      (grid-height q)))]
+      (or shorter smaller))))
 
-
+(provide/contract
+  [column? (-> any/c
+	       boolean?)]
+  [column-shift (-> column?
+		    column?)]
+  [grid-lt (-> (is-a?/c grid%)
+	       (is-a?/c grid%)
+	       boolean?)])

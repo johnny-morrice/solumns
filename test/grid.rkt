@@ -30,6 +30,22 @@
 			       '(1 3)
 			       '(1 4))))))
 
+(test-case "Cloning"
+	   (with-grid (lambda (g)
+			(let [(h (send g clone))]
+			  (check-equal? (send g all-colours)
+					(send h all-colours))
+			  (send h add-column 0 3 '(0 0 0))
+			  (check-false (equal? (send g all-colours)
+					       (send h all-colours)))))))
+
+
+(test-case "Reduction"
+	   (with-grid (lambda (g)
+			(send g reduce)
+			(check-equal? (send g all-colours)
+				      '((1 #f #f #f #f #f)
+					(1 2 2 #f #f #f))))))
 
 (test-case "Elimination"
 	   (with-grid (lambda (g)
@@ -47,3 +63,31 @@
 				      '((1 #f #f #f #f #f)
 					(1 2 2 #f #f #f))))))
 
+(test-case "Losing"
+	   (let [(g (new grid% [width 1] [height 1]))]
+	     (send g add-column 0 0 '#(0 0 0))
+	     (check-true (send g lost?))))
+
+(test-case "Winning"
+	   (let [(g (new grid% [width 1] [height 3]))]
+	     (send g add-column 0 0 '#(0 0 0))
+	     (check-false (send g lost?))))
+
+(test-case "A grid with more squares is harder."
+	   (let [(small (new grid% [width 3] [height 3]))
+		 (big (new grid% [width 3] [height 3]))]
+	     (send small add-column 0 0 '#(0 0 0))
+	     (send big add-column 0 0 '#(0 0 0))
+	     (send big add-column 1 0 '#(0 0 0))
+	     (check-true (grid-lt small big))
+	     (check-false (grid-lt big small))))
+
+(test-case "A taller grid is harder."
+	   (let [(small (new grid% [width 2] [height 6]))
+		 (big (new grid% [width 2] [height 6]))]
+	     (send small add-column 0 0 '#(0 0 0))
+	     (send small add-column 1 0 '#(0 0 0))
+	     (send big add-column 0 0 '#(0 0 0))
+	     (send big add-column 0 3 '#(0 0 0))
+	     (check-true (grid-lt small big))
+	     (check-false (grid-lt big small))))

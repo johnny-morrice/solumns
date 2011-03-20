@@ -16,6 +16,11 @@ task :test_grid do
 	gracket "test/grid.rkt"
 end
 
+desc "Test the brute-force sub-optimising algorithm."
+task :test_bruteforce do
+	gracket "test/brute-force.rkt"
+end
+
 desc "Run solumns"
 task :solumns do
 	gracket "solumns/main.rkt"
