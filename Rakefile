@@ -2,7 +2,10 @@ def gracket args
 	sh "gracket -W info -l errortrace -t #{args}"
 end
 
-desc "Just run racket on a file."
+def racket args
+	sh "racket -W info -l errortrace -t #{args}"
+end
+
 task :racket do
 	if ENV["ARGS"]
 		gracket ENV["ARGS"]
@@ -13,15 +16,22 @@ end
 
 desc "Test the grid file."
 task :test_grid do
-	gracket "test/grid.rkt"
+	racket "test/grid.rkt"
 end
 
 desc "Test the brute-force sub-optimising algorithm."
 task :test_bruteforce do
-	gracket "test/brute-force.rkt"
+	racket "test/brute-force.rkt"
+end
+
+
+desc "Generate random columns."
+task :test_random do
+	racket "test/random.rkt"
 end
 
 desc "Run solumns"
 task :solumns do
 	gracket "solumns/main.rkt"
 end
+

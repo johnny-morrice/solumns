@@ -8,7 +8,11 @@
 		       (lambda (candidate)
 			 (and (vector? candidate)
 			      (= (vector-length candidate) 3)
-			      ((vectorof exact-nonnegative-integer?) candidate)))))
+			      ((vectorof exact-nonnegative-integer?) candidate)
+			      (not (and (= (vector-ref candidate 0)
+					   (vector-ref candidate 1))
+					(= (vector-ref candidate 1)
+					   (vector-ref candidate 2))))))))
 
 ; Produce the next arrangement of a column, like when the player presses up.
 (define (column-shift col)

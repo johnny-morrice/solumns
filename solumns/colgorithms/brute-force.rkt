@@ -1,7 +1,8 @@
 #lang racket
 
 (require "../grid.rkt"
-	 "../colgorithm.rkt")
+	 "../colgorithm.rkt"
+	 "random.rkt")
 
 (provide brute-force%)
 
@@ -23,7 +24,8 @@
 			(init colours)
 
 			(field [columns (permute colours)]
-			       [discrete-columns (make-hash)])
+			       [discrete-columns (make-hash)]
+			       [simple (make-rand colours)])
 
 			; Associate discrete columns with columns
 			(for-each
@@ -38,18 +40,21 @@
 			(public next)
 
 			; Find the next column by bruteforce search of the entire input space
+			; if the grid is empty, give a random column
 			(define (next gr)
-			  (let [(candidates
-				  (hash-map discrete-columns
-					    (lambda (discrete cols)
-					      (list discrete
-						    (car (sort (flatten (map (lambda (col)
-									       (possible-positions gr col))
-									     cols))
-							       grid-lt))))))]
-			    (caar (reverse (sort candidates
-						 (lambda (cand1 cand2)
-						   (grid-lt (cadr cand1) (cadr cand2))))))))
+			  (if (= (send gr size) 0)
+			    (send simple next gr)
+			    (let [(candidates
+				    (hash-map discrete-columns
+					      (lambda (discrete cols)
+						(list discrete
+						      (car (sort (flatten (map (lambda (col)
+										 (possible-positions gr col))
+									       cols))
+								 grid-lt))))))]
+			      (caar (reverse (sort candidates
+						   (lambda (cand1 cand2)
+						     (grid-lt (cadr cand1) (cadr cand2)))))))))
 
 			; Produce every possible position of the column in the grid
 			(define (possible-positions gr col)
@@ -87,11 +92,7 @@
 ; where each place is equal (in base n).  E.g. (0,0,0) is not included in the results.
 ; Numbers are represented as vectors of length 3, in base n.
 (define (permute n)
-  (filter (lambda (v)
-	    (not (and (= (vector-ref v 0)
-			 (vector-ref v 1))
-		      (= (vector-ref v 1)
-			 (vector-ref v 2)))))
+  (filter column?
 	  (for/fold
 	    [(vs (list '#(0 0 0)))]
 	    [(i (in-range 0 (- (expt n 3) 1)))]
