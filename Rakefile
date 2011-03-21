@@ -14,6 +14,17 @@ task :racket do
 	end
 end
 
+
+desc "Test the GUI grid representation."
+task :test_grid do
+	gracket "test/gui/grid.rkt"
+end
+
+desc "Test colour mapping."
+task :test_cmap do
+	gracket "test/gui/colour-mapping.rkt"
+end
+
 desc "Test the grid file."
 task :test_grid do
 	racket "test/grid.rkt"
@@ -24,7 +35,6 @@ task :test_bruteforce do
 	racket "test/brute-force.rkt"
 end
 
-
 desc "Generate random columns."
 task :test_random do
 	racket "test/random.rkt"
@@ -34,4 +44,3 @@ desc "Run solumns"
 task :solumns do
 	gracket "solumns/main.rkt"
 end
-
