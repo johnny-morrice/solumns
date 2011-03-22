@@ -32,7 +32,7 @@ end
 
 desc "Test user input"
 task :test_input do
-	gracket "test/gui/frame.rkt"
+	gracket "test/gui/input.rkt"
 end
 
 desc "Test gravity, neighbouring column elimination." 

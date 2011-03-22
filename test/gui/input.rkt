@@ -30,11 +30,13 @@
 (define printer
   (new printer%))
 
-
 (define win
-  (new solumns-frame%
-       [label "Solumns Test Frame"]
-       [controller printer]))
+  (new frame% [label "Solumns Input Test"]))
+
+(define game-view
+  (new solumns-panel%))
+
+(send game-view controller-is printer)
 
 (new button%
      [parent win]
