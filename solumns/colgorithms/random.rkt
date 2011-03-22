@@ -19,7 +19,7 @@
 ; Random column generator 
 ; The number of colours it is created with must be greater or equal to 3.
 (define/contract rand%
-		 colgorithm/c
+		 colgorithm-class/c
 		 (class object%
 			(super-new)
 

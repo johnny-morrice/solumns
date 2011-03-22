@@ -52,6 +52,5 @@
 
 (send screen-grid update)
 
-
 (send (send canv get-dc)
      draw-bitmap (make-object bitmap% "test/img/layout.png" 'png) 0 0)

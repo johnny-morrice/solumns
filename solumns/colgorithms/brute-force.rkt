@@ -17,7 +17,7 @@
 
 ; Colgorithm that explores the entire input space of columns and hence determines which column is least desirable.
 (define/contract brute-force%
-		 colgorithm/c
+		 colgorithm-class/c
 		 (class object%
 			(super-new)
 
