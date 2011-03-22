@@ -59,34 +59,25 @@
 			; Produce every possible position of the column in the grid
 			(define (possible-positions gr col)
 			  ; This is horrible.  How can I write such a simple function in such a contrived manner? 
-			  (let [(heights (make-hash))]
-			    (for [(x (in-range 0 (get-field width gr)))]
-				 (hash-set! heights x '()))
-			    (send gr visit-squares
-				  (lambda (x y c)
-				    (when c
-				      (hash-set! heights x (cons y (hash-ref heights x))))))
-			    (let* [(next-positions
-				     (for/list [(x (in-hash-keys heights))
-						(ys (in-hash-values heights))]
-					       (list x
-						     (if (null? ys)
-						       0
-						       (car (reverse (sort ys <)))))))
-				   (next-grids
-				     (for/list [(pos (in-list next-positions))]
-					       (let [(matrix (send gr clone))]
-						 (send matrix add-column (car pos) (cadr pos) col)
-						 (send matrix reduce)
-						 matrix)))
-				   (num-pos (length next-grids))
-				   (width (get-field width gr))]
+			  (let* [(heights (send gr heights))
+				 (next-positions
+				   (for/list [(x (in-range 0 (length heights)))
+					      (y (in-list heights))]
+					     (list x y)))
+				 (next-grids
+				   (for/list [(pos (in-list next-positions))]
+					     (let [(matrix (send gr clone))]
+					       (send matrix add-column (car pos) (cadr pos) col)
+					       (send matrix reduce)
+					       matrix)))
+				 (num-pos (length next-grids))
+				 (width (get-field width gr))]
 
-			      (if (= num-pos width)
-				next-grids
-				(raise (exn:fail:contract (format "The number of positions ~a is not equal to the width of the grid! ~a"
-								  num-pos width)
-							  (current-continuation-marks)))))))))
+			    (if (= num-pos width)
+			      next-grids
+			      (raise (exn:fail:contract (format "The number of positions ~a is not equal to the width of the grid! ~a"
+								num-pos width)
+							(current-continuation-marks))))))))
 
 ; Permute from 0, up to n^3, with the exclusion of numbers 
 ; where each place is equal (in base n).  E.g. (0,0,0) is not included in the results.

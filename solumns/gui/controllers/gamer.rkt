@@ -20,18 +20,31 @@
 
 			(override landed)
 
+			(public eliminate lose)
+
+			; Perform elimination on the grid.
+			; Return false if no elimination took place.
+			(define (eliminate)
+			  (not (send grid elimination-step)))
+
+			; You have lost :(
+			(define (lose)
+			  (void))
+
+			; The column has landed.
 			(define (landed)
 			  (super landed)
 			  (send (get-field model this) accelerate 0.02)
 			  (do []
-			    [(not (send grid elimination-step))]
+			    [(send this eliminate)]
 			    (send (get-field model this) update)
-			    (sleep/yield 0.1)
+			    (sleep/yield 0.5)
 			    (send grid gravity))
 			  (send (get-field model this) update)
-			  (when (not (send grid lost?))
-			    (send this add-column
-				  (round-exact (/ (get-field width grid) 2))
-				  (- (get-field height grid) 1)
-				  (send colgorithm next grid))))))
+			  (if (send grid lost?)
+			    (send this lose)
+			    (begin (send this add-column
+					 (round-exact (/ (get-field width grid) 2))
+					 (- (get-field height grid) 1)
+					 (send colgorithm next grid)))))))
 

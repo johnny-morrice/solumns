@@ -60,10 +60,9 @@ task :test_random do
 	racket "test/random.rkt"
 end
 
-desc "Test everything"
+desc "Run all (automated) tests"
 task :test => [:test_grid, :test_random,
-	:test_bruteforce, :test_input,
-	:test_cmap, :test_draw]
+	:test_bruteforce, :test_cmap]
 
 desc "Run solumns"
 task :solumns do

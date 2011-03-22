@@ -58,7 +58,21 @@
 			       [lost #f])
 
 			(public gravity elimination-step add-column visit-squares find-neighbours all-colours clone lost?
-				size reduce matrix-set! can-occupy? drop-until)
+				size reduce matrix-set! can-occupy? drop-until heights)
+
+			; Return the heights of each column in a list.
+			(define (heights)
+			  (for/list [(x (in-range 0 (vector-length matrix)))]
+				    (column-height x)))
+
+			; Return the height of the column at x
+			(define (column-height x)
+			  (let* [(slice (vector-ref matrix x))
+				 (places (vector->list slice))
+				 (colours-end (member #f places))]
+			    (if colours-end
+			      (- (length places) (length colours-end))
+			      (length places))))
 
 			; Have we lost?
 			(define (lost?)
@@ -71,9 +85,7 @@
 
 			; Drop a column until it hits the block or floor above this position
 			(define (drop-until x y col)
-			  (let* [(slice (vector-ref matrix x))
-				 (places (vector->list slice))]
-			    (add-column x (- (length places) (length (member #f places))) col)))
+			  (add-column x (column-height x) col))
 
 			; Clone this grid.
 			(define (clone)
@@ -146,9 +158,7 @@
 
 			; Return the number of filled squares in the grid
 			(define (size)
-			  (apply +
-				 (flatten (visit-squares (lambda (x y c)
-							   (if c 1 0))))))
+			  (apply + (heights)))
 
 			; Perform elimination and gravity steps until there is no change!
 			(define (reduce)
@@ -191,19 +201,9 @@
 					      (visitor i j square))))))
 
 ; Take two grids, rank one higher than another.  Lower value means better for the player.
-; Ranks by height, then by number of squares overall.  If a grid is out of bounds
-; (the player has lost) then it is higher.
 (define (grid-lt p q)
-  (local
-    [(define (grid-height g)
-       (apply max (flatten (send g visit-squares
-				 (lambda (x y c)
-				   (if c y 0))))))]
-    (let [(smaller (< (send p size)
-		      (send q size)))
-	  (shorter (< (grid-height p)
-		      (grid-height q)))]
-      (or shorter smaller))))
+    (< (send p size)
+       (send q size)))
 
 (provide/contract
   [column? (-> any/c
