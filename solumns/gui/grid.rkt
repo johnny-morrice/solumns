@@ -76,7 +76,7 @@
 
 			; Attempt to occupy an area in the grid
 			(define (attempt-horizontal-move x)
-			  (when (send grid can-occupy? x (round-exact (dropper-y next)))
+			  (when (and (>= x 0) (send grid can-occupy? x (round-exact (dropper-y next))))
 			    (set-dropper-x! next x)))
 
 			; Move the next column left
