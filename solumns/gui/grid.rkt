@@ -93,7 +93,7 @@
 			  (let [(x (dropper-x next))
 				(new-y (- (dropper-y next) dy))]
 			    (if (> new-y 0)
-			      (if (send grid can-occupy? x (round-exact new-y))
+			      (if (send grid can-occupy? x (inexact->exact (floor new-y)))
 				(begin (set-dropper-y! next new-y)
 				       #f)
 				(begin (send grid drop-until x (round-exact new-y) (dropper-col next))
