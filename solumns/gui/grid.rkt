@@ -42,7 +42,7 @@
 			       (next #f)
 			       (bl-width 1)
 			       (bl-height 1)
-			       (speed 0.05))
+			       (speed 0.025))
 
 			(send dc set-background (send the-color-database find-color "black"))
 

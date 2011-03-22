@@ -46,7 +46,7 @@
 			; This step should be overridden by subclasses!
 			(define (step)
 			  (send model update)
-			  (sleep/yield 0.1))
+			  (sleep/yield 0.03))
 
 			; The main game loop
 			(define (main-loop)
