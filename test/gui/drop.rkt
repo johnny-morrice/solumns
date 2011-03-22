@@ -27,8 +27,6 @@
 (define dropper
   (new dropper-controller% [model screen]))
 
-
-
 (new button%
      [parent win]
      [label "Start"]
@@ -37,6 +35,6 @@
 		 (send dropper add-column 3 7 '#(1 2 3))
 		 (send game-view controller-is dropper)
 		 (send dropper start)
-		 (send win focus))])
+		 (send game-view focus))])
 
 (send win show #t)
