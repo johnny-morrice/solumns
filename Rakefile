@@ -15,17 +15,17 @@ task :racket do
 end
 
 
-desc "Test the GUI grid representation."
-task :test_grid do
+desc "Check the GUI looks correct."
+task :test_draw do
 	gracket "test/gui/grid.rkt"
 end
 
-desc "Test colour mapping."
+desc "Check that the algorithms can create colours"
 task :test_cmap do
 	gracket "test/gui/colour-mapping.rkt"
 end
 
-desc "Test the grid file."
+desc "Test gravity, neighbouring column elimination." 
 task :test_grid do
 	racket "test/grid.rkt"
 end
@@ -35,7 +35,7 @@ task :test_bruteforce do
 	racket "test/brute-force.rkt"
 end
 
-desc "Generate random columns."
+desc "Test generation of random columns."
 task :test_random do
 	racket "test/random.rkt"
 end
