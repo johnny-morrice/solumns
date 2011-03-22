@@ -6,7 +6,8 @@
 ; A controller responds to user and other input
 (define-syntax-rule (controller-contract contract) 
   (contract [up (->m any)]
-	    [down (->m any)]
+	    [start-drop (->m any)]
+	    [end-drop (->m any)]
 	    [left (->m any)]
 	    [right (->m any)]
 	    [start (->m any)]

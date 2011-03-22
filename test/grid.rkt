@@ -11,6 +11,15 @@
   (send g add-column 1 3 '#(0 0 2))
   (f g))
 
+(test-case "Dropping"
+	   (let [(gr (new grid%
+			  [width 2]
+			  [height 5]))]
+	     (send gr matrix-set! 0 0 0)
+	     (send gr drop-until 0 0 '#(1 2 3))
+	     (check-equal? (send gr all-colours)
+			   '((0 1 2 3 #f) (#f #f #f #f #f)))))
+
 (test-case "Find neighbours"
 	   (with-grid (lambda (g)
 			(check-equal?
