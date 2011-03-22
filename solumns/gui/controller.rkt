@@ -6,13 +6,10 @@
 ; A controller responds to user and other input
 (define-syntax-rule (controller-contract contract) 
   (contract [up-press (->m any)]
-	    [up-release (->m any)]
 	    [down-press (->m any)]
 	    [down-release (->m any)]
 	    [left-press (->m any)]
-	    [left-release (->m any)]
 	    [right-press (->m any)]
-	    [right-release (->m any)]
 	    [start (->m any)]
 	    [stop (->m any)]))
 

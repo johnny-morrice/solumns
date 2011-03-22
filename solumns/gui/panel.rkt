@@ -24,10 +24,12 @@
 			(define (on-subwindow-char receiver event)
 			  (when controller
 			    (case (send event get-key-code)
-			      [(left)  (send controller left)]
-			      [(right) (send controller right)]
-			      [(up)    (send controller up)]
-			      [(down)  (send controller down)])))
+			      [(left)   (send controller left-press)]
+			      [(right)  (send controller right-press)]
+			      [(up)     (send controller up-press)]
+			      [(down)   (send controller down-press)]
+			      [(release) (case (send event get-key-release-code)
+					   [(down)  (send controller down-release)])])))
 
 			(define (on-superwindow-show shown?)
 			  (when (and (not shown?) controller)

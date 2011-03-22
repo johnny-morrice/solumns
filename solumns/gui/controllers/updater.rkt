@@ -14,11 +14,8 @@
 			(field (runner #f))
 
 			(public left-press
-				left-release
 				right-press
-				right-release
 				up-press
-				up-release
 				down-press
 				down-release
 				start stop step)
@@ -27,24 +24,12 @@
 			(define (left-press)
 			  (void))
 
-			; Player releases left
-			(define (left-release)
-			  (void))
-
 			; Player presses right
 			(define (right-press)
 			  (void))
 
-			; Player releases right
-			(define (right-release)
-			  (void))
-
 			; Player presses up
 			(define (up-press)
-			  (void))
-
-			; Player releases up
-			(define (up-release)
 			  (void))
 
 			; Player presses down
