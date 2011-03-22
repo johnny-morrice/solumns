@@ -50,33 +50,39 @@
 			    (raise (exn:fail:contract "There was no next column"
 						      (current-continuation-marks)))))
 
+			; Set the block size by resizing the canvas to fill all available space, and then
+			; resizing the blocks to fill the grid
 			(define (set-block-size)
-			  (call-with-values (lambda () (send canvas get-client-size))
-					    (lambda (canvas-width canvas-height)
+			  (call-with-values (lambda () (send parent get-client-size))
+					    (lambda (parent-width parent-height)
+					      (let [(canvas-width (- parent-width (* 2 (send parent horiz-margin))))
+						    (canvas-height (- parent-height (* 2 (send parent vert-margin))))]
+					      (send canvas min-client-width canvas-width)
+					      (send canvas min-client-height canvas-height)
 					      (set! bl-width (/ canvas-width
 								(get-field width grid)))
 					      (set! bl-height (/ canvas-height
-								 (get-field height grid))))))
+								 (get-field height grid)))))))
 
 			; Shift the new column, as when the player presses up
 			(define (shift)
-			  (with-next (n)
-				     (set-dropper-col! (column-shift (dropper-col n)))))
+			  (with-next (lambda (n)
+				     (set-dropper-col! (column-shift (dropper-col n))))))
 
 			; Attempt to occupy an area in the grid
-			(define (attempt-occupation new-x)
-			  (when (send grid can-occupy? new-x (round y))
-			    (set-dropper-x! next new-x)))
+			(define (attempt-horizontal-move x y)
+			  (when (send grid can-occupy? x (round y))
+			    (set-dropper-x! next x)))
 
 			; Move the next column left
 			(define (left)
-			  (with-next (n)
-				     (attempt-occupation (- x 1))))
+			  (with-next (lambda (n)
+				       (attempt-horizontal-move (- (dropper-x n) 1)))))
 
 			; Move the next column right
 			(define (right)
-			  (with-next (n)
-				     (attempt-occupation (+ x 1))))
+			  (with-next (lambda (n)
+				     (attempt-horizontal-move (+ (dropper-x n) 1)))))
 
 			; Drop the block by a given amount.
 			(define (drop-block dy)
@@ -85,7 +91,7 @@
 			    (if (send grid can-occupy? x (round new-y))
 			      (begin (set-dropper-y! next new-y)
 				     #f)
-			      (begin (send-grid drop-until x (round new-y) (dropper-col next))
+			      (begin (send grid drop-until x (round new-y) (dropper-col next))
 				     (set! next #f)
 				     #t))))
 
@@ -103,7 +109,7 @@
 
 			; Add a column to the GUI
 			(define (add-column x y col)
-			  (set! next (make-dropper x y col)))
+			  (set! next (dropper x y col)))
 
 			; Draw a square, adjusting for relative sizes
 			(define (draw-square x y c)
@@ -120,6 +126,7 @@
 			(define (update)
 			  (send dc clear)
 			  (set-block-size)
+
 
 			  (send grid visit-squares
 				(lambda (x y c)

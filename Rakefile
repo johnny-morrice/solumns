@@ -20,6 +20,11 @@ task :test_draw do
 	gracket "test/gui/grid.rkt"
 end
 
+desc "Check the GUI can be resized and redrawn okay."
+task :test_refresh do
+	gracket "test/gui/refresh.rkt"
+end
+
 desc "Check that the algorithms can create colours"
 task :test_cmap do
 	gracket "test/gui/colour-mapping.rkt"
