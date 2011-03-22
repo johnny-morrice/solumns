@@ -14,7 +14,8 @@
 				 [add-column (->m exact-nonnegative-integer?
 						  exact-nonnegative-integer?
 						  column?
-						  void)]))
+						  void)]
+				 [landed (->m any)]))
 
 		 (class updater-controller%
 			(super-new)
@@ -25,7 +26,7 @@
 				  up-press
 				  down-press
 				  down-release)
-			(public gravity add-column)
+			(public gravity add-column landed)
 
 			(field (throw #f)
 			       (falling #f))
@@ -62,10 +63,15 @@
 			    (send (get-field model this) throw)
 			    (send (get-field model this) drop)))
 
+			; The column has landed
+			(define (landed)
+			  (set! falling #f)
+			  (send (get-field model this) update))
+
 			; Perform a step of the game loop
 			(define (step)
 			  (when falling
 			    (when (gravity)
-			      (set! falling #f)))
+			      (landed)))
 			  (super step))))
 

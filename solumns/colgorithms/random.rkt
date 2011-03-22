@@ -63,7 +63,7 @@
 
 (provide/contract
   [make-rand (-> (and/c exact-nonnegative-integer?
-			(lambda (n) (>= 3 n)))
+			(lambda (n) (>= n 3)))
 		 (is-a?/c rand%))]
   [random-member (-> set?
 		     any)])

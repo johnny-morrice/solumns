@@ -7,13 +7,12 @@
 	 dropper-col)
 
 (require "colour-mapping.rkt"
-	 "../grid.rkt")
+	 "../grid.rkt"
+	 "../util.rkt")
 
 ; Struct representing the dropping column
 (struct dropper (x y col) #:mutable)
 
-(define (round-exact n)
-  (inexact->exact (round n)))
 
 ; User interface for manipulating the grid% by dropping columns on it. 
 (define/contract gui-grid%
@@ -27,7 +26,7 @@
 			  [drop (->m boolean?)]
 			  [throw (->m boolean?)]
 			  [accelerate (->m (and/c real? positive?)
-					   (and/c real? positive?))])
+					   void)])
 		 (class object%
 			(super-new)
 
@@ -113,9 +112,9 @@
 			(define (drop)
 			  (drop-block speed))
 
-			; Accelerate the blocks!
-			(define (accelerate ddy)
-			  (set! speed (+ speed ddy)))
+			; Accelerate the columns by a given fraction of the current speed
+			(define (accelerate percent)
+			  (set! speed (+ speed (* speed percent))))
 
 			; Add a column to the GUI
 			(define (add-column x y col)

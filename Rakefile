@@ -30,6 +30,11 @@ task :test_drop do
 	gracket "test/gui/drop.rkt"
 end
 
+desc "Try a minimal prototype of solumns"
+task :test_game do
+	gracket "test/gui/game.rkt"
+end
+
 desc "Check that the algorithms can create colours"
 task :test_cmap do
 	gracket "test/gui/colour-mapping.rkt"
