@@ -9,8 +9,7 @@
 		 (class/c [controller-is (->m controller/c
 					      void)])
 		 (class panel%
-			(super-new [vert-margin 5]
-				   [horiz-margin 5])
+			(super-new)
 
 			(field (controller #f))
 

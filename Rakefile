@@ -25,6 +25,11 @@ task :test_refresh do
 	gracket "test/gui/refresh.rkt"
 end
 
+desc "Check that the player can move blocks with the arrow keys"
+task :test_drop do
+	gracket "test/gui/drop.rkt"
+end
+
 desc "Check that the algorithms can create colours"
 task :test_cmap do
 	gracket "test/gui/colour-mapping.rkt"

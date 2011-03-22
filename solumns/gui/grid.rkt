@@ -12,6 +12,9 @@
 ; Struct representing the dropping column
 (struct dropper (x y col) #:mutable)
 
+(define (round-exact n)
+  (inexact->exact (round n)))
+
 ; User interface for manipulating the grid% by dropping columns on it. 
 (define/contract gui-grid%
 		 (class/c [update (->m void)]
@@ -33,7 +36,8 @@
 
 			(public update add-column left right drop throw shift accelerate)
 
-			(field (canvas (new canvas% [parent parent]))
+			(field (canvas (new canvas%
+					    [parent parent]))
 			       (dc (send canvas get-dc))
 			       (next #f)
 			       (bl-width 1)
@@ -53,25 +57,26 @@
 			; Set the block size by resizing the canvas to fill all available space, and then
 			; resizing the blocks to fill the grid
 			(define (set-block-size)
-			  (call-with-values (lambda () (send parent get-client-size))
+			  (call-with-values (lambda () (send parent get-size))
 					    (lambda (parent-width parent-height)
-					      (let [(canvas-width (- parent-width (* 2 (send parent horiz-margin))))
-						    (canvas-height (- parent-height (* 2 (send parent vert-margin))))]
-					      (send canvas min-client-width canvas-width)
-					      (send canvas min-client-height canvas-height)
-					      (set! bl-width (/ canvas-width
-								(get-field width grid)))
-					      (set! bl-height (/ canvas-height
-								 (get-field height grid)))))))
+					      (when (and (< 10 parent-width) (< 10 parent-height))
+						(let [(canvas-width (- parent-width 10))
+						      (canvas-height (- parent-height 10))]
+						  (send canvas min-width canvas-width)
+						  (send canvas min-height canvas-height)
+						  (set! bl-width (/ canvas-width
+								    (get-field width grid)))
+						  (set! bl-height (/ canvas-height
+								     (get-field height grid))))))))
 
 			; Shift the new column, as when the player presses up
 			(define (shift)
 			  (with-next (lambda (n)
-				     (set-dropper-col! (column-shift (dropper-col n))))))
+				       (set-dropper-col! (column-shift (dropper-col n))))))
 
 			; Attempt to occupy an area in the grid
-			(define (attempt-horizontal-move x y)
-			  (when (send grid can-occupy? x (round y))
+			(define (attempt-horizontal-move x)
+			  (when (send grid can-occupy? x (round-exact (dropper-y next)))
 			    (set-dropper-x! next x)))
 
 			; Move the next column left
@@ -82,18 +87,23 @@
 			; Move the next column right
 			(define (right)
 			  (with-next (lambda (n)
-				     (attempt-horizontal-move (+ (dropper-x n) 1)))))
+				       (attempt-horizontal-move (+ (dropper-x n) 1)))))
 
 			; Drop the block by a given amount.
 			(define (drop-block dy)
 			  (let [(x (dropper-x next))
-				(new-y (+ (dropper-y next) dy))]
-			    (if (send grid can-occupy? x (round new-y))
-			      (begin (set-dropper-y! next new-y)
-				     #f)
-			      (begin (send grid drop-until x (round new-y) (dropper-col next))
-				     (set! next #f)
-				     #t))))
+				(new-y (- (dropper-y next) dy))]
+			    (if (> new-y 0)
+			      (if (send grid can-occupy? x (round-exact new-y))
+				(begin (set-dropper-y! next new-y)
+				       #f)
+				(begin (send grid drop-until x (round-exact new-y) (dropper-col next))
+				       (set! next #f)
+				       #t))
+			      (begin
+				(send grid add-column x 0 (dropper-col next))
+				(set! next #f)
+				#t))))
 
 			; Throw the column with great alacrity, as when the user presses down
 			(define (throw)
@@ -126,7 +136,6 @@
 			(define (update)
 			  (send dc clear)
 			  (set-block-size)
-
 
 			  (send grid visit-squares
 				(lambda (x y c)
