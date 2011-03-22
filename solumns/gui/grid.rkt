@@ -72,7 +72,7 @@
 			; Shift the new column, as when the player presses up
 			(define (shift)
 			  (with-next (lambda (n)
-				       (set-dropper-col! (column-shift (dropper-col n))))))
+				       (set-dropper-col! next (column-shift (dropper-col n))))))
 
 			; Attempt to occupy an area in the grid
 			(define (attempt-horizontal-move x)

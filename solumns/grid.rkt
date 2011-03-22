@@ -17,9 +17,9 @@
 ; Produce the next arrangement of a column, like when the player presses up.
 (define (column-shift col)
   (let [(next (vector 0 0 0))]
-    (vector-set! next 0 (vector-ref col 1))
-    (vector-set! next 1 (vector-ref col 2))
-    (vector-set! next 2 (vector-ref col 0))
+    (vector-set! next 2 (vector-ref col 1))
+    (vector-set! next 1 (vector-ref col 0))
+    (vector-set! next 0 (vector-ref col 2))
     next))
 
 ; A grid of blocks present on the screen.
