@@ -15,7 +15,7 @@
 			  [eliminate (->m any)]
 			  [lose (->m any)]
 			  [next-column (->m (is-a?/c grid%)
-					    (is-a?/c grid%))])
+					    column?)])
 			  
 
 		 (class dropper-controller%
@@ -37,7 +37,7 @@
 			  (void))
 
 			; Given a grid (NOT the same as the grid field), find the next column
-			(define (next-column grid)
+			(define (next-column clone)
 			  (send colgorithm next clone))
 
 			; The column has landed.
@@ -52,7 +52,7 @@
 			  ; Find the other column in another thread
 			  (when (not lost?)
 			    (thread (lambda ()
-				      (set! next (send this next-column clone))))
+				      (set! next (send this next-column clone)))))
 			  ; Do some special effects while we wait for the next column
 			  (do []
 			    [(send this eliminate)]
