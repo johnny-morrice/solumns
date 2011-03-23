@@ -28,9 +28,10 @@
 			(public eliminate lose next-column)
 
 			; Perform elimination on the grid.
-			; Return false if no elimination took place.
+			; Return the number of blocks removed,
+			; or false otherwise.
 			(define (eliminate)
-			  (not (send grid elimination-step)))
+			  (send grid elimination-step))
 
 			; You have lost :(
 			(define (lose)
@@ -55,7 +56,7 @@
 				      (set! next (send this next-column clone)))))
 			  ; Do some special effects while we wait for the next column
 			  (do []
-			    [(send this eliminate)]
+			    [(not (send this eliminate))]
 			    (send (get-field model this) update)
 			    (sleep/yield 0.5)
 			    (send grid gravity))
@@ -70,6 +71,6 @@
 				(sleep/yield 0.05))
 			      ; Add the column!
 			      (send this add-column
-				    (round-exact (/ (get-field width grid) 2))
+				    (inexact->exact (floor (/ (get-field width grid) 2)))
 				    (- (get-field height grid) 1)
 				    next)))))))

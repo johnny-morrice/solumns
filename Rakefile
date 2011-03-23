@@ -35,6 +35,11 @@ task :test_game do
 	gracket "test/gui/game.rkt"
 end
 
+desc "Try a prototype of solumns with score information displayed."
+task :test_score do
+	gracket "test/gui/score.rkt"
+end
+
 desc "Check that the algorithms can create colours"
 task :test_cmap do
 	gracket "test/gui/colour-mapping.rkt"

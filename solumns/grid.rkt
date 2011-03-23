@@ -26,7 +26,7 @@
 (define/contract grid%
 		 (class/c
 		   [gravity (->m void)]
-		   [elimination-step (->m boolean?)]
+		   [elimination-step (->m (or/c exact-nonnegative-integer? boolean?))]
 		   [visit-squares (->m (-> exact-nonnegative-integer?
 					   exact-nonnegative-integer?
 					   (or/c exact-nonnegative-integer? #f)
@@ -173,6 +173,16 @@
 			  ; Group each colour into sets
 			  (define colours (make-hash))
 
+			  ; We need to compute the number of squares in an insane grid!
+			  (define (size-insane)
+			    (apply + (flatten
+				       (visit-squares (lambda (x y c)
+							(if c 1 0))))))
+
+			  (define size-before
+			    (size-insane))
+			    
+
 			  ; Add each square into the appropriate set
 			  (visit-squares (lambda (x y c)
 					   (when (number? c)
@@ -181,10 +191,17 @@
 					     (hash-set! colours c (set-add (hash-ref colours c) (list x y))))))
 
 			  ; For each colour, find neighbours and delete them.
-			  ; Return true if at least one square was eliminated.
-			  (for/fold [(worked? #f)]
+			  ; Return the number of squares removed or false if this was 0. (due to legacy...)
+			  (let [(removed?
+				  (for/fold [(worked? #f)]
 				    [(clr-set (in-dict-values colours))]
-				    (or (remove-neighbours clr-set) worked?)))
+				    (or (remove-neighbours clr-set) worked?)))]
+
+			    (if removed?
+			      (- size-before (size-insane))
+			      #f)))
+
+
 
 			; Add a column, with the bottom of the column at the given position
 			(define (add-column x y col)
