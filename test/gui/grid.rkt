@@ -21,7 +21,7 @@
 (define win
   (new frame%
        [label "Solumns Grid Representation"]
-       [min-width 600]
+       [min-width 400]
        [min-height 800]))
 
 (send win show #t)

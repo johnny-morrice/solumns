@@ -11,7 +11,10 @@
 ; Play a game of columns!
 (define/contract gamer-controller%
 		 (class/c (init-field [grid (is-a?/c grid%)]
-				      [colgorithm colgorithm/c]))
+				      [colgorithm colgorithm/c])
+			  [eliminate (->m any)]
+			  [lose (->m any)])
+			  
 
 		 (class dropper-controller%
 			(super-new)
@@ -35,16 +38,32 @@
 			(define (landed)
 			  (super landed)
 			  (send (get-field model this) accelerate 0.02)
+			  (let* [(clone (send grid clone)) 
+				 (lost? (begin
+					  (send clone reduce)
+					  (send clone lost?)))
+				 (next #f)]
+			  ; Find the other column in another thread
+			  (when (not lost?)
+			    (thread (lambda ()
+				      (set! next (send colgorithm next clone)))))
+			  ; Do some special effects while we wait for the next column
 			  (do []
 			    [(send this eliminate)]
 			    (send (get-field model this) update)
 			    (sleep/yield 0.5)
 			    (send grid gravity))
 			  (send (get-field model this) update)
-			  (if (send grid lost?)
+			  ; Have we lost?
+			  (if lost?
 			    (send this lose)
-			    (begin (send this add-column
-					 (round-exact (/ (get-field width grid) 2))
-					 (- (get-field height grid) 1)
-					 (send colgorithm next grid)))))))
-
+			    (begin
+			      ; Wait till the column is ready
+			      (do []
+				[next]
+				(sleep/yield 0.05))
+			      ; Add the column!
+			      (send this add-column
+				    (round-exact (/ (get-field width grid) 2))
+				    (- (get-field height grid) 1)
+				    next)))))))
