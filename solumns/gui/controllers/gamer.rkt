@@ -13,7 +13,9 @@
 		 (class/c (init-field [grid (is-a?/c grid%)]
 				      [colgorithm colgorithm/c])
 			  [eliminate (->m any)]
-			  [lose (->m any)])
+			  [lose (->m any)]
+			  [next-column (->m (is-a?/c grid%)
+					    (is-a?/c grid%))])
 			  
 
 		 (class dropper-controller%
@@ -23,7 +25,7 @@
 
 			(override landed)
 
-			(public eliminate lose)
+			(public eliminate lose next-column)
 
 			; Perform elimination on the grid.
 			; Return false if no elimination took place.
@@ -33,6 +35,10 @@
 			; You have lost :(
 			(define (lose)
 			  (void))
+
+			; Given a grid (NOT the same as the grid field), find the next column
+			(define (next-column grid)
+			  (send colgorithm next clone))
 
 			; The column has landed.
 			(define (landed)
@@ -46,7 +52,7 @@
 			  ; Find the other column in another thread
 			  (when (not lost?)
 			    (thread (lambda ()
-				      (set! next (send colgorithm next clone)))))
+				      (set! next (send this next-column clone))))
 			  ; Do some special effects while we wait for the next column
 			  (do []
 			    [(send this eliminate)]
