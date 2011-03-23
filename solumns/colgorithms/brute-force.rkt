@@ -15,6 +15,19 @@
 	 (after (column-shift next))]
     (list col next after)))
 
+(define (discrete-hash columns)
+  (let [(discrete-columns (make-hash))]
+    ; Associate discrete columns with columns
+    (for-each
+      (lambda (col)
+	(let [(cyc (three-cycle col))]
+	  (when (not (ormap (lambda (mirror)
+			      (hash-has-key? discrete-columns mirror))
+			    cyc))
+	    (hash-set! discrete-columns col cyc))))
+      columns)
+    discrete-columns))
+
 ; Colgorithm that explores the entire input space of columns and hence determines which column is least desirable.
 (define/contract brute-force%
 		 colgorithm-class/c
@@ -24,18 +37,8 @@
 			(init colours)
 
 			(field [columns (permute colours)]
-			       [discrete-columns (make-hash)]
+			       [discrete-columns (discrete-hash columns)]
 			       [simple (make-rand colours)])
-
-			; Associate discrete columns with columns
-			(for-each
-			  (lambda (col)
-			    (let [(cyc (three-cycle col))]
-			      (when (not (ormap (lambda (mirror)
-						  (hash-has-key? discrete-columns mirror))
-						cyc))
-				(hash-set! discrete-columns col cyc))))
-			  columns)
 
 			(public next)
 
