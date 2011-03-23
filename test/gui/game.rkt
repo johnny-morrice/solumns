@@ -15,7 +15,7 @@
 (define gr
   (new grid%
        [width 6]
-       [height 12]))
+       [height 15]))
 
 (define brute
   (new brute-force% [colours 7]))
@@ -37,7 +37,7 @@
      [label "Start"]
      [callback (lambda (me evt)
 		 (send win delete-child me)
-		 (send gamer add-column 2 9 (send brute next gr))
+		 (send gamer add-column 2 12 (send brute next gr))
 		 (send game-view controller-is gamer)
 		 (send gamer start)
 		 (send game-view focus))])
