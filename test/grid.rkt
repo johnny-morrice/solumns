@@ -75,12 +75,12 @@
 					(1 2 2 #f #f #f))))))
 
 (test-case "Losing"
-	   (let [(g (new grid% [width 1] [height 1]))]
+	   (let [(g (new grid% [width 1] [height 3]))]
 	     (send g add-column 0 0 '#(0 0 3))
 	     (check-true (send g lost?))))
 
 (test-case "Winning"
-	   (let [(g (new grid% [width 1] [height 3]))]
+	   (let [(g (new grid% [width 1] [height 4]))]
 	     (send g add-column 0 0 '#(0 0 2))
 	     (check-false (send g lost?))))
 

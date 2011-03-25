@@ -54,8 +54,7 @@
 			(field [matrix
 				 (build-vector width
 					       (lambda (i) (build-vector height
-									 (lambda (j) #f))))]
-			       [lost #f])
+									 (lambda (j) #f))))])
 
 			(public gravity elimination-step add-column visit-squares find-neighbours all-colours clone lost?
 				size reduce matrix-set! can-occupy? drop-until heights)
@@ -76,7 +75,7 @@
 
 			; Have we lost?
 			(define (lost?)
-			  lost)
+			  (ormap (lambda (h) (>= h height)) (heights)))
 
 			; Assuming the grid is sane, can a new column sit in this position?
 			(define (can-occupy? x y)
@@ -120,9 +119,8 @@
 
 			; Set an element in the grid's matrix
 			(define (matrix-set! x y val)
-			  (if (in-matrix? x y)
-			    (vector-set! (vector-ref matrix x) y val)
-			    (set! lost #t)))
+			  (when (in-matrix? x y)
+			    (vector-set! (vector-ref matrix x) y val)))
 
 			; Removes neighbours from the matrix, given a set of points.
 			; Returns true if neighbours were removed
