@@ -22,15 +22,14 @@
 			  [drop (->m boolean?)]
 			  [throw (->m boolean?)]
 			  [accelerate (->m (and/c real? positive?)
-					   void)]
-			  [update (->m void)])
+					   void)])
 		 (class object%
 			(super-new)
 
 			(init parent)
 			(init-field grid)
 
-			(public update add-column left right drop throw shift accelerate)
+			(public add-column left right drop throw shift accelerate)
 
 			(field (canvas
 				 (new grid-canvas%
@@ -38,10 +37,6 @@
 				      [grid grid]))
 			       (next #f)
 			       (speed 0.05))
-
-			; Update the GUI
-			(define (update)
-			  (send canvas refresh))
 
 			; Perform a function with a next column
 			; if it doesn't exist, then raise a contract error

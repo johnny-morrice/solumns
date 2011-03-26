@@ -1,0 +1,60 @@
+gracket -W info -l errortrace -t test/gui/drop.rkt
+Controller started
+/home/spoon/Desktop/solumns/solumns/gui/colour-mapping.rkt:20.3: 
+  (file
+   /home/spoon/Desktop/solumns/solumns/gui/colour-mapping.rkt)
+ broke the contract 
+  (->
+   (and/c
+    exact-nonnegative-integer?
+    ...lour-mapping.rkt:21:24)
+   (listof (and/c real? positive?)))
+ on to-colour; expected <(and/c real? positive?)>, given: 0
+/home/spoon/Desktop/solumns/solumns/gui/grid-canvas.rkt:48:48: '(lifted.4 c)
+/home/spoon/Desktop/solumns/solumns/gui/grid-canvas.rkt:48:32: '(apply gl-color (lifted.4 c))
+/home/spoon/Desktop/solumns/solumns/gui/grid-canvas.rkt:42:26: '(let-values (((t) (+ (let-values ((....)) (....)) b))) (gl-begin 'quads) (apply gl-color (lifted.4 c)) (gl-vertex l b) (gl-vertex l t) (gl-vertex r b) (gl-vertex r ....) (gl-end))
+/home/spoon/Desktop/solumns/solumns/gui/grid-canvas.rkt:85:34: '((letrec-values (((for-loop) (lambda (fold-var pos ....) (if ....)))) for-loop) (void) start '0)
+/home/spoon/Desktop/solumns/solumns/gui/grid-canvas.rkt:66:26: '((with-gl-context10 self513) self513 (lambda () (gl-clear-color '0.0 '.... (....) ....) (gl-clear '.... (....)) (gl-matrix-mode (....)) (gl-load-identity) (....) ....))
+/home/spoon/Desktop/solumns/solumns/gui/grid-canvas.rkt:93:48: '(sleep/yield '0.03)
+
+
+ === context ===
+/usr/lib64/racket/collects/racket/contract/private/blame.rkt:54:0: raise-blame-error
+/usr/lib64/racket/collects/racket/private/map.rkt:45:11: for-each
+/usr/lib64/racket/collects/racket/contract/private/misc.rkt:736:21
+/home/spoon/Desktop/solumns/solumns/gui/grid-canvas.rkt:41:24: draw-square
+/home/spoon/Desktop/solumns/solumns/gui/grid-canvas.rkt:85:34: for-loop
+/home/spoon/Desktop/solumns/solumns/gui/grid-canvas.rkt:67:28
+/usr/lib64/racket/collects/racket/private/more-scheme.rkt:158:2: call-with-break-parameterization
+/usr/lib64/racket/collects/racket/private/more-scheme.rkt:274:2: call-with-exception-handler
+/usr/lib64/racket/collects/mred/private/misc.rkt:40:2: sleep/yield
+/home/spoon/Desktop/solumns/solumns/gui/grid-canvas.rkt:92:46
+
+/home/spoon/Desktop/solumns/solumns/gui/colour-mapping.rkt:20.3: 
+  (file
+   /home/spoon/Desktop/solumns/solumns/gui/colour-mapping.rkt)
+ broke the contract 
+  (->
+   (and/c
+    exact-nonnegative-integer?
+    ...lour-mapping.rkt:21:24)
+   (listof (and/c real? positive?)))
+ on to-colour; expected <(and/c real? positive?)>, given: 0
+/home/spoon/Desktop/solumns/solumns/gui/grid-canvas.rkt:48:48: '(lifted.4 c)
+/home/spoon/Desktop/solumns/solumns/gui/grid-canvas.rkt:48:32: '(apply gl-color (lifted.4 c))
+/home/spoon/Desktop/solumns/solumns/gui/grid-canvas.rkt:42:26: '(let-values (((t) (+ (let-values ((....)) (....)) b))) (gl-begin 'quads) (apply gl-color (lifted.4 c)) (gl-vertex l b) (gl-vertex l t) (gl-vertex r b) (gl-vertex r ....) (gl-end))
+/home/spoon/Desktop/solumns/solumns/gui/grid-canvas.rkt:85:34: '((letrec-values (((for-loop) (lambda (fold-var pos ....) (if ....)))) for-loop) (void) start '0)
+/home/spoon/Desktop/solumns/solumns/gui/grid-canvas.rkt:66:26: '((with-gl-context10 self513) self513 (lambda () (gl-clear-color '0.0 '.... (....) ....) (gl-clear '.... (....)) (gl-matrix-mode (....)) (gl-load-identity) (....) ....))
+
+
+ === context ===
+/usr/lib64/racket/collects/racket/contract/private/blame.rkt:54:0: raise-blame-error
+/usr/lib64/racket/collects/racket/private/map.rkt:45:11: for-each
+/usr/lib64/racket/collects/racket/contract/private/misc.rkt:736:21
+/home/spoon/Desktop/solumns/solumns/gui/grid-canvas.rkt:41:24: draw-square
+/home/spoon/Desktop/solumns/solumns/gui/grid-canvas.rkt:85:34: for-loop
+/home/spoon/Desktop/solumns/solumns/gui/grid-canvas.rkt:67:28
+/usr/lib64/racket/collects/racket/private/more-scheme.rkt:158:2: call-with-break-parameterization
+/usr/lib64/racket/collects/racket/private/more-scheme.rkt:274:2: call-with-exception-handler
+
+Controller stopping...

@@ -57,10 +57,8 @@
 			  ; Do some special effects while we wait for the next column
 			  (do []
 			    [(not (send this eliminate))]
-			    (send (get-field model this) update)
 			    (sleep/yield 0.5)
 			    (send grid gravity))
-			  (send (get-field model this) update)
 			  ; Have we lost?
 			  (if lost?
 			    (send this lose)

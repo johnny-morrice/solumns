@@ -8,7 +8,7 @@
 
 ; Create a grid
 (define gr
-  (new grid% [width 3] [height 5]))
+  (new grid% [width 3] [height 6]))
 
 (send gr matrix-set! 0 0 0)
 (send gr matrix-set! 0 1 1)

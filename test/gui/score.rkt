@@ -25,7 +25,8 @@
   (new brute-force% [colours 7]))
 
 (define game-view
-  (new solumns-panel% [parent hoz]))
+  (new solumns-panel%
+       [parent hoz]))
 
 (define screen
   (new gui-grid% [parent game-view] [grid gr]))
@@ -33,8 +34,9 @@
 (define vert
   (new vertical-panel%
        [parent hoz]
-       [min-width 200]
-       [alignment '(left center)]))
+       [alignment '(left center)]
+       [min-width 100]
+       [stretchable-width #f]))
 
 (define hud
   (new score-panel% [parent vert]))

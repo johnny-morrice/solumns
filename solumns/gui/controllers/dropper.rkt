@@ -65,8 +65,7 @@
 
 			; The column has landed
 			(define (landed)
-			  (set! falling #f)
-			  (send (get-field model this) update))
+			  (set! falling #f))
 
 			; Perform a step of the game loop
 			(define (step)

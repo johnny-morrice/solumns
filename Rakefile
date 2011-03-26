@@ -82,7 +82,7 @@ end
 
 desc "Run all (automated) tests"
 task :test => [:test_grid, :test_random,
-	:test_bruteforce, :test_cmap]
+	:test_bruteforce, :test_cmap, :test_record]
 
 desc "Run solumns"
 task :solumns do
