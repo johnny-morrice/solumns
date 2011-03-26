@@ -11,7 +11,7 @@
   (new frame%
        [label "Test Solums Game with High-Score"]
        [width 600]
-       [height 600]))
+       [height 900]))
 
 (define (create-gui)
   (define hoz
@@ -26,7 +26,9 @@
     (new brute-force% [colours 7]))
 
   (define game-view
-    (new solumns-panel% [parent hoz]))
+    (new solumns-panel%
+	 [parent hoz]
+	 [min-width 500]))
 
   (define screen
     (new gui-grid% [parent game-view] [grid gr]))
@@ -34,7 +36,7 @@
   (define vert
     (new vertical-panel%
 	 [parent hoz]
-	 [min-width 200]
+	 [min-width 100]
 	 [alignment '(left center)]))
 
   (define hud

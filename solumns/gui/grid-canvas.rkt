@@ -37,7 +37,7 @@
 
 			; Draw a square, adjusting for relative sizes
 			(define (draw-square x y c)
-			  (let* [(border 0.03)
+			  (let* [(border 0.05)
 				 (l (* x))
 				 (ler (+ border l))
 				 (r (+ 1 l))
@@ -47,7 +47,7 @@
 				 (t (+ 1 b))
 				 (ter (- t border))
 				 (light (to-colour c))
-				 (darken (lambda (col) (map (lambda (n) (* 0.8 n)) col)))
+				 (darken (lambda (col) (map (lambda (n) (* 0.9 n)) col)))
 				 (dark (darken light))
 				 (darker (darken dark))]
 
@@ -84,7 +84,7 @@
 				(gl-vertex rer ber)
 				(gl-vertex r b)
 				(gl-vertex r t)
-				(gl-vertex rer t)
+				(gl-vertex rer ter)
 			    (gl-end)))
 
 			; Update the GUI

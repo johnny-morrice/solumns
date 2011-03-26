@@ -2,13 +2,13 @@
 
 ; A hash of colour numbers as used by colgorithms to colors
 (define colour-table
-  (hash 0 '(1.0 0.0 0.0)
-	1 '(1.0 1.0 0)
-	2 '(0.0 1.0 0)
-	3 '(0.0 0.0 1.0)
+  (hash 0 '(0.9 0.0 0.0)
+	1 '(0.9 0.9 0)
+	2 '(0.0 0.9 0)
+	3 '(0.0 0.0 0.9)
 	4 '(0.0 0.81 0.81)
 	5 '(0.87 0.0 1.0)
-	6 '(0.85 0.55 0.0)))
+	6 '(0.45 0.45 0.45)))
 
 
 ; Map integers or #f to colours, recognised by gracket
