@@ -8,7 +8,7 @@
 (define/contract solumns-panel%
 		 (class/c [controller-is (->m controller/c
 					      void)])
-		 (class panel%
+		 (class vertical-panel%
 			(super-new)
 
 			(field (controller #f))
@@ -32,6 +32,7 @@
 					   [(down)  (send controller down-release)])])))
 
 			(define (on-superwindow-show shown?)
+			  (super on-superwindow-show shown?)
 			  (when (and (not shown?) controller)
 			    (send controller stop)))))
 

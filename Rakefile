@@ -17,7 +17,7 @@ end
 
 desc "Check the GUI looks correct."
 task :test_draw do
-	gracket "test/gui/grid.rkt"
+	gracket "test/gui/draw.rkt"
 end
 
 desc "Check the GUI can be resized and redrawn okay."
