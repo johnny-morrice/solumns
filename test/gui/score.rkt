@@ -9,7 +9,7 @@
 
 (define win
   (new frame%
-       [label "Solums Game with Score"]
+       [label "Test Solums Game with Score"]
        [width 600]
        [height 600]))
 

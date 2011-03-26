@@ -1,9 +1,6 @@
 #lang racket
 
 (require "../controller.rkt"
-	 "../../colgorithm.rkt"
-	 "../../grid.rkt"
-	 "../../util.rkt"
 	 "../score-panel.rkt"
 	 "gamer.rkt")
 
@@ -23,7 +20,8 @@
 
 			; When you lose, tell the score board
 			(define (lose)
-			  (send score-board game-over))
+			  (send score-board game-over)
+			  (super lose))
 
 			; We time the generation of new columns
 			(define (next-column clone)

@@ -42,13 +42,16 @@
 
 			; The game is started
 			(define (start)
-			  (set! runner (thread main-loop)))
+			  (set! runner (thread main-loop))
+			  (log-info "Controller started"))
 
 			; The game should be immediately stopped
 			(define (stop)
 			  (if runner
-			    (begin (kill-thread runner)
-				   (set! runner #f))
+			    (begin
+			      (log-info "Controller stopping...")
+			      (kill-thread runner)
+			      (set! runner #f))
 			    (raise (exn:fail:contract "Thread was stopped before being started"
 						      (current-continuation-marks)))))
 

@@ -40,6 +40,16 @@ task :test_score do
 	gracket "test/gui/score.rkt"
 end
 
+desc "Test a version of solumns with high score gathering"
+task :test_hiscore do
+	gracket "test/gui/hiscore.rkt"
+end
+
+desc "Check to see if we can fill in a high score properly"
+task :test_fill_hiscore do
+	gracket "test/gui/fill-hiscore.rkt"
+end
+
 desc "Check that the algorithms can create colours"
 task :test_cmap do
 	gracket "test/gui/colour-mapping.rkt"

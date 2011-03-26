@@ -8,7 +8,7 @@
 
 (define win
   (new frame%
-       [label "Solums Game Prototype"]
+       [label "Test Solums Game Prototype"]
        [width 600]
        [height 600]))
 

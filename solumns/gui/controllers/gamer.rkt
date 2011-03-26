@@ -35,7 +35,7 @@
 
 			; You have lost :(
 			(define (lose)
-			  (void))
+			  (send this stop))
 
 			; Given a grid (NOT the same as the grid field), find the next column
 			(define (next-column clone)
@@ -71,6 +71,7 @@
 				(sleep/yield 0.05))
 			      ; Add the column!
 			      (send this add-column
-				    (inexact->exact (floor (/ (get-field width grid) 2)))
+				    (inexact->exact (floor (/ (- (get-field width grid) 1)
+							      2)))
 				    (- (get-field height grid) 1)
 				    next)))))))
