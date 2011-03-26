@@ -30,6 +30,11 @@ task :test_drop do
 	gracket "test/gui/drop.rkt"
 end
 
+desc "Test that we can keep a record of high scores okay."
+task :test_record do
+	gracket "test/gui/record.rkt"
+end
+
 desc "Try a minimal prototype of solumns"
 task :test_game do
 	gracket "test/gui/game.rkt"

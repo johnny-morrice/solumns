@@ -1,18 +1,12 @@
 #lang racket/gui
 
 (require "../high-score-viewer.rkt"
-	 "scorer.rkt"
-	 srfi/1
-	 framework/preferences)
+	 "../high-scores.rkt"
+	 "scorer.rkt")
 
 (provide high-score-controller%)
 
-(preferences:set-default 'solumns:high-scores
-			 '()
-			 (listof score?)) 
-
-(define (sort-scores scores)
-  (sort scores (lambda (s1 s2) (< (cadr s1) (cadr s2)))))
+(set-default-high-scores)
 
 ; Record the player's high scores :D
 (define/contract high-score-controller%
@@ -26,22 +20,19 @@
 
 			; When you lose, try to record a high score.
 			(define (lose)
-			  (let [(old-scores (preferences:get 'solumns:high-scores))
+			  (let [(old-scores (get-high-scores))
 				(new-score (list #f (get-field score this)))]
 			    (if (null? old-scores)
 			      (new-high-score (list new-score))
 			      (when (< (cadar (sort-scores old-scores)) (get-field score this))
-				(new-high-score (reverse (sort-scores (cons new-score old-scores))))))
-			    (super lose)))
+				(new-high-score (cons new-score old-scores)))))
+			    (super lose))
 
 			; You have a new high score!
 			(define (new-high-score scores)
 			  (set! score-win
 			    (new frame% [label "You have a new high score!"]))
-			  (let* [(shorter-scores
-				   (if (> 10 (length scores))
-				     scores
-				     (cons (car scores) (take (cdr scores) 10))))
+			  (let* [(shorter-scores (top-ten scores))
 				 (viewer
 				   (new high-score-viewer%
 					[parent score-win]
@@ -56,7 +47,7 @@
 									  (send viewer new-hero)
 									  (cadr x))))
 								    shorter-scores))]
-					       (preferences:set 'solumns:high-scores new-scores))
+					       (set-high-scores new-scores))
 					     (send score-win show #f))])
 			    (send score-win show #t)
 			    (send viewer display-scores)))))

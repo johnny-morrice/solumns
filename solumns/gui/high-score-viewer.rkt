@@ -1,12 +1,8 @@
 #lang racket/gui
 
-(provide high-score-viewer%
-	 score?)
+(require "high-scores.rkt")
 
-(define (score? score)
-  (and (or (string? (car score))
-	   (eq? #f (car score)))
-       (exact-nonnegative-integer? (cadr score))))
+(provide high-score-viewer%)
 
 ; Allow the user to fill in their high scores!
 ; Scores should be added in decreasing order.
