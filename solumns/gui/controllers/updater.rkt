@@ -47,13 +47,9 @@
 
 			; The game should be immediately stopped
 			(define (stop)
-			  (if runner
-			    (begin
+			  (when runner
 			      (log-info "Controller stopping...")
-			      (kill-thread runner)
-			      (set! runner #f))
-			    (raise (exn:fail:contract "Thread was stopped before being started"
-						      (current-continuation-marks)))))
+			      (kill-thread runner)))
 
 			; This step should be overridden by subclasses!
 			(define (step)
