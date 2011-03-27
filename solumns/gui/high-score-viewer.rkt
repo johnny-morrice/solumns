@@ -22,6 +22,7 @@
 
 			; Display the scores
 			(define (display-scores)
+			  (printf "scores were ~a\n" scores)
 			  (for [(i (in-range 1 (+ 1 (length scores))))
 				(score scores)]
 			       (display-score i (car score) (cadr score))))

@@ -100,14 +100,3 @@
 	     (send gr matrix-set! 1 0 4)
 	     (check-equal? (send gr heights)
 			   '(3 1 0 3))))
-
-(test-case "An overall taller grid is harder."
-	   (let [(small (new grid% [width 4] [height 3]))
-		 (big (new grid% [width 4] [height 3]))]
-	     (send small add-column 0 0 '#(0 1 2))
-	     (send big matrix-set! 0 0 0)
-	     (send big matrix-set! 1 0 1)
-	     (send big matrix-set! 2 0 2)
-	     (send big matrix-set! 3 0 3)
-	     (check-true (grid-lt small big))
-	     (check-false (grid-lt big small))))

@@ -47,27 +47,30 @@
 			(define (next gr)
 			  (if (= (send gr size) 0)
 			    (send simple next gr)
-			    (let [(candidates
-				    (hash-map discrete-columns
-					      (lambda (discrete cols)
-						(list discrete
-						      (car (sort (flatten (map (lambda (col)
-										 (possible-positions gr col))
-									       cols))
-								 grid-lt))))))]
-			      (caar (reverse (sort candidates
-						   (lambda (cand1 cand2)
-						     (grid-lt (cadr cand1) (cadr cand2)))))))))
+			    (let* [(heights (send gr heights))
+				   (next-positions
+				     (for/list [(x (in-range 0 (length heights)))
+						(y (in-list heights))]
+					       (list x y)))
+				   (candidates
+				     (hash-map discrete-columns
+					       (lambda (discrete cols)
+						 (list discrete
+						       (car (sort (flatten (map (lambda (col)
+										  (possible-positions gr col next-positions))
+										cols))
+								  grid-lt))))))]
+			      ; Get the most difficult grid!
+			      (car (foldr
+				     (lambda (current highest)
+				       (if (grid-lt (cadr highest) (cadr current))
+					 current
+					 highest)) (car candidates) (cdr candidates))))))
 
 			; Produce every possible position of the column in the grid
-			(define (possible-positions gr col)
+			(define (possible-positions gr col next-positions)
 			  ; This is horrible.  How can I write such a simple function in such a contrived manner? 
-			  (let* [(heights (send gr heights))
-				 (next-positions
-				   (for/list [(x (in-range 0 (length heights)))
-					      (y (in-list heights))]
-					     (list x y)))
-				 (next-grids
+			  (let* [(next-grids
 				   (for/list [(pos (in-list next-positions))]
 					     (let [(matrix (send gr clone))]
 					       (send matrix add-column (car pos) (cadr pos) col)
