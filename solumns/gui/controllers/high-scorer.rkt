@@ -15,16 +15,12 @@
   (class frame%
 	 (super-new)
 
-	 (override on-superwindow-show)
+	 (augment on-close)
 
 	 (init-field controller)
 
-	 (define (on-superwindow-show shown?)
-	   (when (not shown?)
-	     (send controller on-high-score-saved)))))
-
-
-	 
+	 (define (on-close)
+	     (send controller on-high-score-saved))))
 
 ; Record the player's high scores :D
 (define/contract high-score-controller%
@@ -85,9 +81,10 @@
 									  (cadr x))))
 								    shorter-scores))]
 					       (set-high-scores new-scores))
-					     (send score-win show #f))])
-			    (send score-win show #t)
-			    (send viewer display-scores)))))
+					     (send score-win show #f)
+					     (send this on-high-score-saved))]) 
+			    (send viewer display-scores)
+			    (send score-win show #t)))))
 
 
 

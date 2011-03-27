@@ -33,14 +33,12 @@
   (define screen
     (new gui-grid% [parent game-view] [grid gr]))
 
-  (define vert
-    (new vertical-panel%
-	 [parent hoz]
-	 [min-width 100]
-	 [alignment '(left center)]))
-
   (define hud
-    (new score-panel% [parent vert]))
+    (new score-panel%
+	 [parent hoz]
+	 [alignment '(left center)]
+	 [min-width 100]
+	 [stretchable-width #f]))
 
   (define high-scorer 
     (new high-score-controller%

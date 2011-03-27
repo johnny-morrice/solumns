@@ -18,10 +18,13 @@
 			  ; Create a button on the score board
 			  ; that restarts the game
 			  (define (make-restart-button)
+			    (log-info "making restart button")
 			    (new button%
 				 [parent (get-field score-board this)]
 				 [label "Play again"]
-				 [callback restart-callback]))
+				 [callback
+				   (lambda (me evt)
+				     (restart-callback))]))
 
 			  ; When the high score is saved, create the
 			  ; restart game button

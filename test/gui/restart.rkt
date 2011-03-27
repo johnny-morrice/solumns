@@ -9,8 +9,8 @@
 
 (define win
   (new frame%
-       [label "Test Solums Game with High-Score"]
-       [width 600]
+       [label "Test Solums Game that can be restarted"]
+       [width 800]
        [height 900]))
 
 (define (create-gui)
@@ -33,14 +33,12 @@
   (define screen
     (new gui-grid% [parent game-view] [grid gr]))
 
-  (define vert
-    (new vertical-panel%
-	 [parent hoz]
-	 [min-width 100]
-	 [alignment '(left center)]))
-
   (define hud
-    (new score-panel% [parent vert]))
+    (new score-panel%
+	 [parent hoz]
+	 [alignment '(left center)]
+	 [min-width 200]
+	 [stretchable-width #f]))
 
   (define restarter 
     (new restarter-controller%
