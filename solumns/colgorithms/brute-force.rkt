@@ -61,11 +61,10 @@
 										cols))
 								  grid-lt))))))]
 			      ; Get the most difficult grid!
-			      (car (foldr
-				     (lambda (current highest)
-				       (if (grid-lt (cadr highest) (cadr current))
-					 current
-					 highest)) (car candidates) (cdr candidates))))))
+			      (car (argmax
+				     (lambda (cnd)
+				       (send (cadr cnd) size))
+				     candidates)))))
 
 			; Produce every possible position of the column in the grid
 			(define (possible-positions gr col next-positions)

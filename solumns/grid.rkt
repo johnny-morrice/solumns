@@ -26,12 +26,18 @@
 (define/contract grid%
 		 (class/c
 		   [gravity (->m void)]
-		   [elimination-step (->m (or/c exact-nonnegative-integer? boolean?))]
+		   [elimination-step (->m (or/c exact-nonnegative-integer? #f))]
 		   [visit-squares (->m (-> exact-nonnegative-integer?
 					   exact-nonnegative-integer?
 					   (or/c exact-nonnegative-integer? #f)
 					   any)
 				       (listof (listof any/c)))]
+		   [visit-squares-matrix (->m (-> exact-nonnegative-integer?
+						  exact-nonnegative-integer?
+						  (or/c exact-nonnegative-integer? #f)
+						  any)
+					      (vectorof (vectorof any/c)))]
+
 		   [add-column (->m exact-nonnegative-integer?
 				    exact-nonnegative-integer?
 				    column?
@@ -56,8 +62,10 @@
 					       (lambda (i) (build-vector height
 									 (lambda (j) #f))))])
 
-			(public gravity elimination-step add-column visit-squares find-neighbours all-colours clone lost?
-				size reduce matrix-set! can-occupy? drop-until heights)
+			; Mostly we expose so much so that the testing module can get at them
+			; better to do this with module hiding
+			(public gravity elimination-step add-column visit-squares visit-squares-matrix all-colours clone lost?
+				size reduce matrix-set! can-occupy? drop-until heights tag around)
 
 			; Return the heights of each column in a list.
 			(define (heights)
@@ -80,7 +88,7 @@
 			; Assuming the grid is sane, can a new column sit in this position?
 			(define (can-occupy? x y)
 			  (and (in-matrix? x y)
-			       (not (vector-ref (vector-ref matrix x) y)))) 
+			       (not (matrix-ref x y))))
 
 			; Drop a column until it hits the block or floor above this position
 			(define (drop-until x y col)
@@ -95,6 +103,17 @@
 			      (lambda (x y c)
 				(send gen matrix-set! x y c)))
 			    gen))
+
+			; Return all squares around the neighbours and the object itself
+			(define (around x y)
+			  (filter vector?
+				  (for*/list [(i (in-list '(-1 0 1)))
+					      (j (in-list '(-1 0 1)))]
+					     (let [(n (+ x i))
+						   (m (+ y j))]
+					       (if (in-matrix? n m)
+						 (vector n m (matrix-ref n m))
+						 #f)))))
 
 			; Is this coordinate in the matrix?
 			(define (in-matrix? x y)
@@ -117,42 +136,14 @@
 					  (vector-append dropped
 							 (make-vector (- height (vector-length dropped)) #f)))))))
 
+			; Get an element in the matrix
+			(define (matrix-ref x y)
+			  (vector-ref (vector-ref matrix x) y))
+
 			; Set an element in the grid's matrix
 			(define (matrix-set! x y val)
 			  (when (in-matrix? x y)
 			    (vector-set! (vector-ref matrix x) y val)))
-
-			; Removes neighbours from the matrix, given a set of points.
-			; Returns true if neighbours were removed
-			(define (remove-neighbours unreached [worked? #f])
-			  (if (set-empty? unreached)
-			    worked?
-			    (for/first [(square unreached)]
-				       (call-with-values (lambda ()
-							   (find-neighbours (set square) unreached))
-							 (lambda (neighbours now-unreached)
-							   (let [(working? (>= (length (for/list [(n neighbours)] n)) 3))]
-							     (when working?
-							       (for [(pos neighbours)]
-								    (matrix-set! (car pos) (cadr pos) #f)))
-							     (remove-neighbours now-unreached
-										(or worked? working?))))))))
-
-			; Find a set of neighbours and a new set of unreached values, given a list of currently joined squares and a set of unreached neighbours
-			(define (find-neighbours reached unreached)
-			  (let* [(candidates (apply set
-						    (filter (lambda (pos)
-							      (apply in-matrix? pos))
-							    (for*/list [(square reached)
-									(xd (in-range -1 2))
-									(yd (in-range -1 2))]
-								       (list (+ (car square) xd)
-									     (+ (cadr square) yd))))))
-				 (present (set-intersect candidates unreached))]
-			    (if (set-empty? present)
-			      (values reached unreached)
-			      (find-neighbours (set-union reached present)
-					       (set-subtract unreached candidates)))))
 
 			; Return the number of filled squares in the grid
 			(define (size)
@@ -164,48 +155,60 @@
 			    [(not (elimination-step)) (void)]
 			    (gravity)))
 
+			; Tag the squares based on their number of neighbours.
+			; Return a matrix of said squares
+			(define (tag)
+			  (local [(define (count-neighbours x y c)
+				    (if c
+				      (foldl (lambda (ne total)
+					       (if (eq? (vector-ref ne 2) c)
+						 (+ total 1)
+						 total))
+					     0 (around x y))
+				      0))]
+				 (visit-squares-matrix
+				   (lambda (x y c)
+				     (count-neighbours x y c)))))
+
 			; Apply a single step of elimination to a grid (that is, removal of congruent elements)
-			; Return true if squares were eliminated, false otherwise.
+			; Return number if squares were eliminated, false otherwise.
+			;
+			; This algorithm uses the fact that if three squares are connected, each square
+			; is or is connected to at least one square that is connected to at least two others
 			(define (elimination-step)
-
-			  ; Group each colour into sets
-			  (define colours (make-hash))
-
-			  ; We need to compute the number of squares in an insane grid!
-			  (define (size-insane)
-			    (apply + (flatten
-				       (visit-squares (lambda (x y c)
-							(if c 1 0))))))
-
-			  (define size-before
-			    (size-insane))
-			    
-
-			  ; Add each square into the appropriate set
-			  (visit-squares (lambda (x y c)
-					   (when (number? c)
-					     (when (and (not (hash-has-key? colours c)))
-					       (hash-set! colours c (set)))
-					     (hash-set! colours c (set-add (hash-ref colours c) (list x y))))))
-
-			  ; For each colour, find neighbours and delete them.
-			  ; Return the number of squares removed or false if this was 0. (due to legacy...)
-			  (let [(removed?
-				  (for/fold [(worked? #f)]
-				    [(clr-set (in-dict-values colours))]
-				    (or (remove-neighbours clr-set) worked?)))]
-
-			    (if removed?
-			      (- size-before (size-insane))
+			  (let* [(tagged (tag))
+				 (removing
+				   (for*/fold
+				     [(deleted '())]
+				     [(x (in-range 0 width))
+				      (y (in-range 0 height))]
+				     (let [(c (matrix-ref x y))]
+				       (if (and c
+						(ormap (lambda (pos)
+							 (>= (vector-ref (vector-ref tagged (vector-ref pos 0)) (vector-ref pos 1))
+							     3))
+						       (filter (lambda (pos) (eq? c (vector-ref pos 2)))
+							       (around x y))))
+					 (cons (vector x y) deleted)
+					 deleted))))
+				 (removed (length removing))]
+			    (for-each
+			      (lambda (pos)
+				(matrix-set! (vector-ref pos 0) (vector-ref pos 1) #f))
+			      removing)
+			    (if (> removed 0)
+			      removed
 			      #f)))
-
-
 
 			; Add a column, with the bottom of the column at the given position
 			(define (add-column x y col)
 			  (for [(c col)
 				(i (in-range 0 3))]
 			       (matrix-set! x (+ y i) c)))
+
+			; Pass a function which visits all squares, return another matrix
+			(define (visit-squares-matrix visitor)
+			  (list->vector (map list->vector (visit-squares visitor))))
 
 			; Pass a function which visits all squares in the matrix.
 			(define (visit-squares visitor)
@@ -217,8 +220,8 @@
 
 ; Take two grids, rank one higher than another.  Lower value means better for the player.
 (define (grid-lt p q)
-    (< (send p size)
-       (send q size)))
+  (< (send p size)
+     (send q size)))
 
 (provide/contract
   [column? (-> any/c
