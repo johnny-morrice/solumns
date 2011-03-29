@@ -14,7 +14,6 @@ task :racket do
 	end
 end
 
-
 desc "Check the GUI looks correct."
 task :test_draw do
 	gracket "test/gui/draw.rkt"
@@ -92,4 +91,9 @@ task :test => [:test_grid, :test_random,
 desc "Run solumns"
 task :solumns do
 	gracket "solumns/main.rkt"
+end
+
+desc "Wordcount"
+task :words do
+	sh "wc `find -regex '.+.rkt'` | sort -n"
 end
