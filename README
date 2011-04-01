@@ -1,3 +1,15 @@
 :( solumns
 
 A suboptimal columns game.  Where it gives you the colours you don't want!
+
+What you need:
+
+The racket programming language
+http://racket-lang.org/
+
+Rake, a build tool
+http://rake.rubyforge.org/
+
+How to run:
+
+rake test_restart

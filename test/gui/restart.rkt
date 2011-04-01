@@ -10,8 +10,8 @@
 (define win
   (new frame%
        [label "Test Solums Game that can be restarted"]
-       [width 800]
-       [height 900]))
+       [width 600]
+       [height 800]))
 
 (define (create-gui)
   (define hoz
@@ -28,7 +28,7 @@
   (define game-view
     (new solumns-panel%
 	 [parent hoz]
-	 [min-width 500]))
+	 [min-width 400]))
 
   (define screen
     (new gui-grid% [parent game-view] [grid gr]))
