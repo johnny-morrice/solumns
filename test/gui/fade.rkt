@@ -53,7 +53,7 @@
   (define restarter 
     (new fader-controller%
 	 [game-delay 0.03]
-	 [acceleration 0.02]
+	 [acceleration 0.001]
 	 [gravity-delay 0.2]
 	 [model screen]
 	 [grid gr]

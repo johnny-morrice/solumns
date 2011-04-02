@@ -92,9 +92,9 @@
 			(define (drop)
 			  (drop-block speed))
 
-			; Accelerate the columns by a given fraction of the current speed
-			(define (accelerate percent)
-			  (set! speed (+ speed (* speed percent))))
+			; Accelerate the columns by a given amount 
+			(define (accelerate constant)
+			  (set! speed (+ speed constant)))
 
 			; Add a column to the GUI
 			(define (add-column x y col)
