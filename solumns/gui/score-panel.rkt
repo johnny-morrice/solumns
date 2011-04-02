@@ -8,15 +8,14 @@
   (class/c [score-now (->m exact-nonnegative-integer?
 			   void)]
 	   [search-time (->m (and/c real? positive?)
-				 void)]
-	   [game-over (->m void)])
+				 void)])
 
   (class vertical-panel%
 	 (super-new)
 
 	 (inherit refresh)
 
-	 (public score-now search-time game-over)
+	 (public score-now search-time)
 
 	 (field (score-message (new message%
 				    [parent this]
@@ -26,13 +25,6 @@
 					 [parent this]
 					 [label ""]
 					 [auto-resize #t])))
-	 ; It's game over man!
-	 (define (game-over)
-	   (new message%
-		[parent this]
-		[label "Game over!"])
-	   (refresh))
-
 	 ; Set the score
 	 (define (score-now n)
 	   (send score-message set-label

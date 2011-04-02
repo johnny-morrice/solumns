@@ -2,9 +2,8 @@
 
 (require "../../solumns/gui/panel.rkt"
 	 "../../solumns/gui/grid.rkt"
-	 "../../solumns/gui/grid-canvas.rkt"
 	 "../../solumns/gui/score-panel.rkt"
-	 "../../solumns/gui/controllers/restarter.rkt"
+	 "../../solumns/gui/controllers/fader.rkt"
 	 "../../solumns/grid.rkt"
 	 "../../solumns/colgorithms/brute-force.rkt")
 
@@ -31,17 +30,8 @@
 	 [parent hoz]
 	 [min-width 400]))
 
-  (define can
-    (new grid-canvas%
-	 [frame-delay 0.03]
-	 [grid gr]
-	 [parent game-view]))
-
   (define screen
-    (new gui-grid%
-	 [speed 0.05]
-	 [canvas can]
-	 [grid gr]))
+    (new fader-gui-grid% [parent game-view] [grid gr]))
 
   (define hud
     (new score-panel%
@@ -50,11 +40,8 @@
 	 [min-width 200]
 	 [stretchable-width #f]))
 
-  (define restarter 
-    (new restarter-controller%
-	 [game-delay 0.03]
-	 [acceleration 0.02]
-	 [gravity-delay 0.5]
+  (define fader 
+    (new fader-controller%
 	 [model screen]
 	 [grid gr]
 	 [colgorithm brute]
@@ -64,9 +51,9 @@
 	     (send win delete-child hoz)
 	     (create-gui))]))
 
-  (send restarter add-column 2 12 (send brute next gr))
-  (send game-view controller-is restarter)
-  (send restarter start)
+  (send fader add-column 2 12 (send brute next gr))
+  (send game-view controller-is fader)
+  (send fader start)
   (send game-view focus))
 
 (new button%

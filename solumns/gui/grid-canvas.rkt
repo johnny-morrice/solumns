@@ -13,18 +13,19 @@
 		 (class/c [falling (->m dropper? 
 					void)]
 			  [remove-falling (->m void)]
-			  (init-field [grid (is-a?/c grid%)]))
+			  (init-field [frame-delay (and/c real? positive?)]
+			  	      [grid (is-a?/c grid%)]))
 
 		 (class canvas%
 			(super-new [style '(no-autoclear)])
 
-			(public falling remove-falling)
+			(public falling remove-falling draw-grid render-square shades)
 			(override on-paint)
 			(inherit refresh with-gl-context swap-gl-buffers get-width get-height)
 
-			(init-field grid)
+			(init-field grid frame-delay)
 
-			(field (next #f))
+			(field [next #f])
 			
 			; A column is falling
 			(define (falling drop)
@@ -34,9 +35,24 @@
 			(define (remove-falling)
 			  (set! next #f))
 
+			; Produce the three shades used for rendering a colour 
+			(define (shades c)
+			  (let* [(darken (lambda (col)
+					   (map (lambda (n) (* 0.9 n))
+						col)))
+				 (dark (darken c))
+				 (darker (darken dark))]
+			    (list c dark darker)))
+
+			; Draw the grid
+			(define (draw-grid)
+			  (send grid visit-squares
+				(lambda (x y c)
+				  (when c
+				    (draw-square x y c)))))
 
 			; Draw a square, adjusting for relative sizes
-			(define (draw-square x y c)
+			(define (render-square x y light dark darker)
 			  (let* [(border 0.05)
 				 (l (* x))
 				 (ler (+ border l))
@@ -45,13 +61,8 @@
 				 (b (* y))
 				 (ber (+ b border))
 				 (t (+ 1 b))
-				 (ter (- t border))
-				 (light (to-colour c))
-				 (darken (lambda (col) (map (lambda (n) (* 0.9 n)) col)))
-				 (dark (darken light))
-				 (darker (darken dark))]
-
-			    (gl-begin 'quads)
+				 (ter (- t border))]
+			    			    (gl-begin 'quads)
 			    	(apply gl-color light)
 				(gl-vertex l b)
 				(gl-vertex ler ber)
@@ -87,6 +98,13 @@
 				(gl-vertex rer ter)
 			    (gl-end)))
 
+			; Draw a square, taking the three needed colours
+			; for the borders and the centre as arguments
+			(define (draw-square x y c)
+			    (apply (lambda (l d dr)
+				     (render-square x y l d dr))
+				   (shades (to-colour c))))
+
 			; Update the GUI
 			(define (on-paint)
 			  (with-gl-context
@@ -99,10 +117,7 @@
 			      (gl-push-matrix)
 			      (gluOrtho2D 0 (get-field width grid) 0 (get-field height grid))
 
-			      (send grid visit-squares
-				    (lambda (x y c)
-				      (when c
-					(draw-square x y c))))
+			      (send this draw-grid)
 
 			      (when next
 				(let [(x (dropper-x next))
@@ -116,5 +131,5 @@
 
 			      (swap-gl-buffers)
 			      (queue-callback (lambda ()
-						(sleep/yield 0.03)
+						(sleep/yield frame-delay)
 						(refresh))))))))

@@ -6,11 +6,12 @@
 
 ; A controller that just updates the display
 (define/contract updater-controller%
-		 controller-class/c
+		 (and/c controller-class/c
+			(class/c (init-field [game-delay (and/c real? positive?)])))
 		 (class object%
 			(super-new)
 
-			(init-field model)
+			(init-field model game-delay)
 			(field (runner #f))
 
 			(public left-press
@@ -53,7 +54,7 @@
 
 			; This step should be overridden by subclasses!
 			(define (step)
-			  (sleep/yield 0.03))
+			  (sleep/yield game-delay))
 
 			; The main game loop
 			(define (main-loop)

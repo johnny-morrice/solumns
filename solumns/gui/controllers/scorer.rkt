@@ -13,15 +13,10 @@
 		 (class gamer-controller%
 			(super-new)
 
-			(override eliminate lose next-column)
+			(override eliminate next-column)
 
 			(init-field score-board)
 			(field (score 0))
-
-			; When you lose, tell the score board
-			(define (lose)
-			  (send score-board game-over)
-			  (super lose))
 
 			; We time the generation of new columns
 			(define (next-column clone)
@@ -33,10 +28,11 @@
 
 			; When blocks are eliminated, we count the score.
 			(define (eliminate)
-			  (let [(blocks-removed (super eliminate))]
-			    (when blocks-removed
+			  (let* [(blocks (super eliminate))
+				 (blocks-removed (length blocks))]
+			    (when (> blocks-removed 0)
 			      (set! score (+ score (* 100 blocks-removed)))
 			      (send score-board score-now score))
-			    blocks-removed))))
+			    blocks))))
 			    
 

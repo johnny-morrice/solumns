@@ -22,21 +22,18 @@
 			  [drop (->m boolean?)]
 			  [throw (->m boolean?)]
 			  [accelerate (->m (and/c real? positive?)
-					   void)])
+					   void)]
+			  (init-field [canvas (is-a?/c grid-canvas%)]
+				      [grid (is-a?/c grid%)]
+				      [speed (and/c real? positive?)]))
 		 (class object%
 			(super-new)
 
-			(init parent)
-			(init-field grid)
+			(init-field grid canvas speed)
 
 			(public add-column left right drop throw shift accelerate)
 
-			(field (canvas
-				 (new grid-canvas%
-				      [parent parent]
-				      [grid grid]))
-			       (next #f)
-			       (speed 0.05))
+			(field [next #f])
 
 			; Perform a function with a next column
 			; if it doesn't exist, then raise a contract error

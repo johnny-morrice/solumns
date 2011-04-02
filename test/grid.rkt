@@ -64,7 +64,7 @@
 			(let [(eliminated (send g elimination-step))]
 			  (when (not eliminated)
 			    (log-error "ERROR: elimination did not succeed!"))
-			  (check-equal? eliminated 5)
+			  (check-equal? (length eliminated) 5)
 			  (check-equal? (send g all-colours)
 					'((#f 1 #f #f #f #f)
 					  (1 #f 2 #f #f 2)))))))

@@ -2,6 +2,7 @@
 
 (require "../../solumns/gui/panel.rkt"
 	 "../../solumns/gui/grid.rkt"
+	 "../../solumns/gui/grid-canvas.rkt"
 	 "../../solumns/grid.rkt"
 	 "../../solumns/gui/controllers/dropper.rkt")
 
@@ -21,11 +22,22 @@
 (define game-view
   (new solumns-panel% [parent win]))
 
+(define can
+  (new grid-canvas%
+       [grid gr]
+       [frame-delay 0.03]
+       [parent game-view]))
+
 (define screen
-  (new gui-grid% [parent game-view] [grid gr]))
+  (new gui-grid%
+       [speed 0.05]
+       [canvas can]
+       [grid gr]))
 
 (define dropper
-  (new dropper-controller% [model screen]))
+  (new dropper-controller%
+       [game-delay 0.03]
+       [model screen]))
 
 (new button%
      [parent win]

@@ -2,6 +2,7 @@
 
 (require "../../solumns/gui/panel.rkt"
 	 "../../solumns/gui/grid.rkt"
+	 "../../solumns/gui/grid-canvas.rkt"
 	 "../../solumns/gui/score-panel.rkt"
 	 "../../solumns/gui/controllers/high-scorer.rkt"
 	 "../../solumns/grid.rkt"
@@ -30,8 +31,17 @@
 	 [parent hoz]
 	 [min-width 500]))
 
+  (define can
+    (new grid-canvas%
+	 [frame-delay 0.03]
+	 [grid gr]
+	 [parent game-view]))
+
   (define screen
-    (new gui-grid% [parent game-view] [grid gr]))
+    (new gui-grid%
+	 [speed 0.05]
+	 [canvas can]
+	 [grid gr]))
 
   (define hud
     (new score-panel%
@@ -42,6 +52,9 @@
 
   (define high-scorer 
     (new high-score-controller%
+	 [game-delay 0.03]
+	 [acceleration 0.02]
+	 [gravity-delay 0.5]
 	 [model screen]
 	 [grid gr]
 	 [colgorithm brute]

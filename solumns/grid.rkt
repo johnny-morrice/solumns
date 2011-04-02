@@ -26,7 +26,7 @@
 (define/contract grid%
 		 (class/c
 		   [gravity (->m void)]
-		   [elimination-step (->m (or/c exact-nonnegative-integer? #f))]
+		   [elimination-step (->m (listof (vectorof exact-nonnegative-integer?)))]
 		   [visit-squares (->m (-> exact-nonnegative-integer?
 					   exact-nonnegative-integer?
 					   (or/c exact-nonnegative-integer? #f)
@@ -152,7 +152,7 @@
 			; Perform elimination and gravity steps until there is no change!
 			(define (reduce)
 			  (do []
-			    [(not (elimination-step)) (void)]
+			    [(= (length (elimination-step)) 0)]
 			    (gravity)))
 
 			; Tag the squares based on their number of neighbours.
@@ -189,16 +189,14 @@
 							     3))
 						       (filter (lambda (pos) (eq? c (vector-ref pos 2)))
 							       (around x y))))
-					 (cons (vector x y) deleted)
+					 (cons (vector x y c) deleted)
 					 deleted))))
 				 (removed (length removing))]
 			    (for-each
 			      (lambda (pos)
 				(matrix-set! (vector-ref pos 0) (vector-ref pos 1) #f))
 			      removing)
-			    (if (> removed 0)
-			      removed
-			      #f)))
+			    removing))
 
 			; Add a column, with the bottom of the column at the given position
 			(define (add-column x y col)
