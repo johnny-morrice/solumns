@@ -1,13 +1,16 @@
 #lang racket/gui
 
-(require "../controller.rkt")
+(require "../controller.rkt"
+	 "../grid.rkt")
 
 (provide updater-controller%)
 
 ; A controller that just updates the display
 (define/contract updater-controller%
 		 (and/c controller-class/c
-			(class/c (init-field [game-delay (and/c real? positive?)])))
+			(class/c
+			  (init-field [game-delay (and/c real? positive?)]
+				      [model (is-a?/c gui-grid%)])))
 		 (class object%
 			(super-new)
 

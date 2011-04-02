@@ -1,7 +1,8 @@
 #lang racket/gui
 
 (require "../../solumns/gui/panel.rkt"
-	 "../../solumns/gui/grid.rkt"
+	 "../../solumns/gui/grid-fader.rkt"
+	 "../../solumns/gui/fader-canvas.rkt"
 	 "../../solumns/gui/score-panel.rkt"
 	 "../../solumns/gui/controllers/fader.rkt"
 	 "../../solumns/grid.rkt"
@@ -9,7 +10,7 @@
 
 (define win
   (new frame%
-       [label "Test Solums Game that can be restarted"]
+       [label "Test Solums Game with SPECIAL FX"]
        [width 600]
        [height 800]))
 
@@ -30,8 +31,17 @@
 	 [parent hoz]
 	 [min-width 400]))
 
+  (define can
+    (new fader-canvas%
+	 [frame-delay 0.03]
+	 [grid gr]
+	 [parent game-view]))
+
   (define screen
-    (new fader-gui-grid% [parent game-view] [grid gr]))
+    (new gui-grid-fader%
+	 [speed 0.05]
+	 [canvas can]
+	 [grid gr]))
 
   (define hud
     (new score-panel%
@@ -40,8 +50,11 @@
 	 [min-width 200]
 	 [stretchable-width #f]))
 
-  (define fader 
+  (define restarter 
     (new fader-controller%
+	 [game-delay 0.03]
+	 [acceleration 0.02]
+	 [gravity-delay 0.2]
 	 [model screen]
 	 [grid gr]
 	 [colgorithm brute]
@@ -51,9 +64,9 @@
 	     (send win delete-child hoz)
 	     (create-gui))]))
 
-  (send fader add-column 2 12 (send brute next gr))
-  (send game-view controller-is fader)
-  (send fader start)
+  (send restarter add-column 2 12 (send brute next gr))
+  (send game-view controller-is restarter)
+  (send restarter start)
   (send game-view focus))
 
 (new button%

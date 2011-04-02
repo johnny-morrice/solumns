@@ -51,7 +51,10 @@
 		   [drop-until (->m exact-nonnegative-integer?
 				    exact-nonnegative-integer?
 				    column?
-				    void)])
+				    void)]
+		   [matrix-ref (->m exact-nonnegative-integer?
+				    exact-nonnegative-integer?
+				    (or/c #f exact-nonnegative-integer?))])
 
 		 (class object%
 			(super-new)
@@ -65,7 +68,7 @@
 			; Mostly we expose so much so that the testing module can get at them
 			; better to do this with module hiding
 			(public gravity elimination-step add-column visit-squares visit-squares-matrix all-colours clone lost?
-				size reduce matrix-set! can-occupy? drop-until heights tag around)
+				size reduce matrix-set! can-occupy? drop-until heights tag around matrix-ref)
 
 			; Return the heights of each column in a list.
 			(define (heights)

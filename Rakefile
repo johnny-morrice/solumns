@@ -54,6 +54,11 @@ task :test_restart do
 	gracket "test/gui/restart.rkt"
 end
 
+desc "Test a version of solumns that fades out eliminated blocks."
+task :test_fade do
+	gracket "test/gui/fade.rkt"
+end
+
 desc "Check to see if we can fill in a high score properly"
 task :test_fill_hiscore do
 	gracket "test/gui/fill-hiscore.rkt"

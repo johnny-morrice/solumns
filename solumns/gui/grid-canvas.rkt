@@ -45,8 +45,8 @@
 			    (list c dark darker)))
 
 			; Draw the grid
-			(define (draw-grid)
-			  (send grid visit-squares
+			(define (draw-grid [gr grid])
+			  (send gr visit-squares
 				(lambda (x y c)
 				  (when c
 				    (draw-square x y c)))))
@@ -62,7 +62,7 @@
 				 (ber (+ b border))
 				 (t (+ 1 b))
 				 (ter (- t border))]
-			    			    (gl-begin 'quads)
+    			    (gl-begin 'quads)
 			    	(apply gl-color light)
 				(gl-vertex l b)
 				(gl-vertex ler ber)
@@ -110,7 +110,7 @@
 			  (with-gl-context
 			    (lambda ()
 			      (gl-clear-color 0.0 0.0 0.0 0.0)
-			      (gl-clear 'color-buffer-bit 'depth-buffer-bit)
+			      (gl-clear 'color-buffer-bit)
 
 			      (gl-matrix-mode 'modelview)
 			      (gl-load-identity)
