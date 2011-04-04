@@ -1,5 +1,7 @@
 #lang racket
 
+(require racket/unsafe/ops)
+
 (provide grid%)
 
 ; A column is a vector of length 3, containing exact integers.
@@ -112,18 +114,18 @@
 			  (filter vector?
 				  (for*/list [(i (in-list '(-1 0 1)))
 					      (j (in-list '(-1 0 1)))]
-					     (let [(n (+ x i))
-						   (m (+ y j))]
+					     (let [(n (unsafe-fx+ x i))
+						   (m (unsafe-fx+ y j))]
 					       (if (in-matrix? n m)
 						 (vector n m (matrix-ref n m))
 						 #f)))))
 
 			; Is this coordinate in the matrix?
 			(define (in-matrix? x y)
-			  (and (>= x 0)
-			       (>= y 0)
-			       (< x width)
-			       (< y height)))
+			  (and (unsafe-fx>= x 0)
+			       (unsafe-fx>= y 0)
+			       (unsafe-fx< x width)
+			       (unsafe-fx< y height)))
 
 			(define (all-colours)
 			  (visit-squares
@@ -155,7 +157,7 @@
 			; Perform elimination and gravity steps until there is no change!
 			(define (reduce)
 			  (do []
-			    [(= (length (elimination-step)) 0)]
+			    [(unsafe-fx= (length (elimination-step)) 0)]
 			    (gravity)))
 
 			; Tag the squares based on their number of neighbours.
@@ -165,7 +167,7 @@
 				    (if c
 				      (foldl (lambda (ne total)
 					       (if (eq? (vector-ref ne 2) c)
-						 (+ total 1)
+						 (unsafe-fx+ total 1)
 						 total))
 					     0 (around x y))
 				      0))]
@@ -188,7 +190,7 @@
 				     (let [(c (matrix-ref x y))]
 				       (if (and c
 						(ormap (lambda (pos)
-							 (>= (vector-ref (vector-ref tagged (vector-ref pos 0)) (vector-ref pos 1))
+							 (unsafe-fx>= (vector-ref (vector-ref tagged (vector-ref pos 0)) (vector-ref pos 1))
 							     3))
 						       (filter (lambda (pos) (eq? c (vector-ref pos 2)))
 							       (around x y))))
