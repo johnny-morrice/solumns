@@ -12,4 +12,4 @@ http://rake.rubyforge.org/
 
 How to run:
 
-rake test_restart
+rake test_fade
