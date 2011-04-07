@@ -76,15 +76,6 @@
 			(check-equal? (send g all-colours)
 				      '((1 #f #f #f #f #f)
 					(1 2 2 #f #f #f))))))
-(test-case "Bigger is harder ;)"
-	   (let [(big (new grid% [width 2] [height 3]))
-		 (small (new grid% [width 2] [height 3]))]
-	     (send big add-column 0 0 '#(0 0 1))
-	     (send big add-column 1 0 '#( 2 3 4))
-	     (send small add-column 0 0 '#(0 0 1))
-	     (check-true (grid-lt small big))
-	     (check-false (grid-lt big small))))
-
 (test-case "Losing"
 	   (let [(g (new grid% [width 1] [height 3]))]
 	     (send g add-column 0 0 '#(0 0 3))

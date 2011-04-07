@@ -2,31 +2,25 @@
 
 (require "../grid.rkt"
 	 "../colgorithm.rkt"
-	 "random.rkt")
+	 "random.rkt"
+	 racket/unsafe/ops)
 
 (provide brute-force%)
 
 (provide/contract [permute (-> exact-nonnegative-integer?
-			       (listof (vectorof exact-nonnegative-integer?)))])
+			       (listof (listof column?)))]
+		  [permute-singles (-> exact-nonnegative-integer?
+				       (listof column?))]
+		  [permute-doubles (-> exact-nonnegative-integer?
+				       (listof column?))]
+		  [three-cycle (-> column?
+				   (listof column?))])
 
 ; Take a column and produce three columns; each of the columns that may be created when the player presses up!
 (define (three-cycle col)
   (let* [(next (column-shift col))
 	 (after (column-shift next))]
     (list col next after)))
-
-(define (discrete-hash columns)
-  (let [(discrete-columns (make-hash))]
-    ; Associate discrete columns with columns
-    (for-each
-      (lambda (col)
-	(let [(cyc (three-cycle col))]
-	  (when (not (ormap (lambda (mirror)
-			      (hash-has-key? discrete-columns mirror))
-			    cyc))
-	    (hash-set! discrete-columns col cyc))))
-      columns)
-    discrete-columns))
 
 ; Colgorithm that explores the entire input space of columns and hence determines which column is least desirable.
 (define/contract brute-force%
@@ -37,7 +31,6 @@
 			(init colours)
 
 			(field [columns (permute colours)]
-			       [discrete-columns (discrete-hash columns)]
 			       [simple (make-rand colours)])
 
 			(public next)
@@ -45,7 +38,7 @@
 			; Find the next column by bruteforce search of the entire input space
 			; if the grid is empty, give a random column
 			(define (next gr)
-			  (if (= (send gr size) 0)
+			  (if (unsafe-fx= (send gr size) 0)
 			    (send simple next gr)
 			    (let* [(heights (send gr heights))
 				   (next-positions
@@ -53,13 +46,15 @@
 						(y (in-list heights))]
 					       (list x y)))
 				   (candidates
-				     (hash-map discrete-columns
-					       (lambda (discrete cols)
-						 (list discrete
-						       (car (sort (flatten (map (lambda (col)
-										  (possible-positions gr col next-positions))
-										cols))
-								  grid-lt))))))]
+				     (map (lambda (cols)
+					    (list (car cols)
+						  (argmin (lambda (gr)
+							    (send gr size))
+							  (flatten (map (lambda (col)
+									  (possible-positions gr col next-positions))
+									cols)))))
+					  columns))]
+
 			      ; Get the most difficult grid!
 			      (car (argmax
 				     (lambda (cnd)
@@ -84,22 +79,53 @@
 								num-pos width)
 							(current-continuation-marks))))))))
 
-; Permute from 0, up to n^3, with the exclusion of numbers 
-; where each place is equal (in base n).  E.g. (0,0,0) is not included in the results.
-; Numbers are represented as vectors of length 3, in base n.
-(define (permute n)
-  (filter column?
-	  (for/fold
-	    [(vs (list '#(0 0 0)))]
-	    [(i (in-range 0 (- (expt n 3) 1)))]
-	    (cons (next n (car vs)) vs))))
+; Take a column and return a new column with the last two elements swapped
+(define (swap-last c)
+  (vector (vector-ref c 0) (vector-ref c 2) (vector-ref c 1)))
 
-; Given a number v in base n, represent by a vector of length 3, return the vector which is 1 greater than this number.
-; Raises a contract error if v = n^3.
-; This is pretty stupid, but it's okay for generating the sort of
-; permutation like objects we're looking for, as long
-; as columns continue to be of length 3!
-(define (next n v)
+; Create possible columns, with each colour different, with n colours
+(define (permute-singles n)
+  (if (> n 2)
+    (let [(ending (vector (- n 3) (- n 2) (- n 1)))]
+      ; Here we make columns which have no elements the same
+      (let singles [(vs (list '#(0 1 2) '#(0 2 1)))]
+	(let [(u (car vs))]
+	  (if (not (equal? u ending))
+	    (let* [(v (next-single n u))
+		   (w (swap-last v))]
+	      (singles (append (list v w) vs)))
+	    vs))))
+    '()))
+
+; Create possible columns, with 2 colours the same, with n colours
+(define (permute-doubles n)
+  (let [(ending (vector (- n 1) (- n 2) (- n 2)))]
+    (let doubles [(vs (list '#(0 1 1)))]
+      (let [(u (car vs))]
+	(if (not (equal? u ending))
+		 (doubles (cons (next-double n (car vs)) vs))
+		 vs)))))
+
+; Creates all possible columns given n colours.
+;
+; Returns a vector of length (n^3 - n) / 3,
+; each member of which is a vector of length three,
+; containing columns - each of which can be rotated to produce the other two.
+;
+; Each column should be unique, amongst all the others returned.
+;
+; Look up some group theory, if this confuses you.
+(define (permute n)
+  (map three-cycle
+       (append (permute-doubles n) (permute-singles n))))
+
+; Given n colours, is the colour at the ith position in the column the max colour?
+(define (max-colour? n i v)
+  (= (vector-ref v i)
+     (- n 1)))
+
+; Produce a new column and pass it to a function along with functions to manipulate that column
+(define (with-column-ops n v f)
   (local
     [(define cand
        (vector 0 0 0))
@@ -108,20 +134,47 @@
 		    (vector-ref v i)))
      (define (inc i)
        (vector-set! cand i
-		    (+ 1 (vector-ref v i))))
-     (define (max? i)
-       (= i (- n 1)))]
-    (if (max? (vector-ref v 2))
-      (if (max? (vector-ref v 1))
-	(if (max? (vector-ref v 0))
-	  (raise (exn:fail:contract "Cannot exceed n^3" (current-continuation-marks)))
-	  (inc 0))
-	(begin
-	  (inc 1)
-	  (copy 0)))
-      (begin
-	(inc 2)
-	(copy 1)
-	(copy 0)))
-    cand))
+		    (+ 1 (vector-ref v i))))]
+    (f cand copy inc)))
+
+; Given the number of colours, and a column which has three numbers all different,
+; produce the next column that has three numbers all different.
+(define (next-single n v)
+  (with-column-ops n v
+		   (lambda (cand copy inc)
+		     (if (max-colour? n 2 v)
+		       (if (>= (vector-ref v 1) (- (vector-ref v 2) 1))
+			 (if (>= (vector-ref v 0) (- (vector-ref v 1) 1))
+			   (raise (exn:fail:contract "Ran out of single columns" (current-continuation-marks)))
+			   (begin
+			     (inc 0)
+			     (copy 1)
+			     (copy 2)))
+			 (begin
+			   (inc 1)
+			   (copy 0)
+			   (copy 2)))
+		       (begin 
+			 (inc 2)
+			 (copy 0)
+			 (copy 1)))
+		     cand)))
+
+; Given the number of colours, and a column which has two numbers the same,
+; return the next column has two numbers the same
+(define (next-double n v)
+  (with-column-ops n v
+		   (lambda (cand copy inc)
+		     (if (max-colour? n 1 v)
+		       (if (max-colour? n 0 v)
+			 (raise (exn:fail:contract "Ran out of double columns" (current-continuation-marks)))
+			 (begin
+			   (inc 0)))
+		       (begin
+			 (inc 1)
+			 (inc 2)
+			 (copy 0)))
+		     (if (column? cand)
+		       cand
+		       (next-double n cand)))))
 

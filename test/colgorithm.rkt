@@ -31,9 +31,11 @@
 		     (send cl add-column x y single-col)
 		     (send cl reduce)
 		     cl))]
-		(check-eq? (send (car (sort (list (single-col-pos 0 2) (single-col-pos 1 2)) grid-lt))
+		(check-eq? (send (argmin (lambda (gr)
+					   (send gr size))
+					 (list (single-col-pos 0 2) (single-col-pos 1 2)))
 				 size)
-			   7))
+			   4))
 	 ; Check if a harder minimisation works
 	 (send double add-column 2 0 (send cg next double))
 	 (send double reduce)

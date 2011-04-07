@@ -165,7 +165,7 @@
 			(define (tag)
 			  (local [(define (count-neighbours x y c)
 				    (if c
-				      (foldl (lambda (ne total)
+				      (foldr (lambda (ne total)
 					       (if (eq? (vector-ref ne 2) c)
 						 (unsafe-fx+ total 1)
 						 total))
@@ -221,16 +221,8 @@
 					       (j (in-range 0 (vector-length col)))]
 					      (visitor i j square))))))
 
-; Take two grids, rank one higher than another.  Lower value means better for the player.
-(define (grid-lt p q)
-  (< (send p size)
-     (send q size)))
-
 (provide/contract
   [column? (-> any/c
 	       boolean?)]
   [column-shift (-> column?
-		    column?)]
-  [grid-lt (-> (is-a?/c grid%)
-	       (is-a?/c grid%)
-	       boolean?)])
+		    column?)])
