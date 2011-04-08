@@ -51,9 +51,8 @@
 ; Get the top ten scores!
 (define (top-ten scores)
   (let [(reversed (reverse (sort-scores scores)))]
-    (if (< 10 (length scores))
-      (cons (car reversed)
-	    (take (cdr reversed) 9))
+    (if (> (length reversed) 10)
+      (take reversed 10)
       reversed)))
 
 ; Get the high scores

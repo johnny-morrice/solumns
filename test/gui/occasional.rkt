@@ -24,7 +24,7 @@
 	 [height 15]))
 
   (define brute
-    (new occasional% [colours 7]))
+    (new occasional% [colours 9]))
 
   (define game-view
     (new solumns-panel%
