@@ -1,4 +1,4 @@
-#lang racket/gui
+#lang racket
 
 (require "brute-force.rkt")
 
@@ -14,9 +14,8 @@
 	 (field [count 0])
 
 	 (define (next-evil gr)
-	   (if (or (= 5 count) (= 0 (random 10)))
+	   (if (or (= 7 count) (= 0 (random 14)))
 	     (begin
-	       (sleep/yield 0.1)
 	       (set! count 0)
 	       (send this next-random gr))
 	     (begin
