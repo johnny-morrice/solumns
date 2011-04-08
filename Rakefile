@@ -6,11 +6,11 @@ def racket args
 	sh "racket -W info -l errortrace -t #{args}"
 end
 
-task :racket do
-	if ENV["ARGS"]
-		gracket ENV["ARGS"]
+def solumns_exe
+	if RUBY_PLATFORM =~ /(win|w)32$/
+		"solumns.exe"
 	else
-		raise "Usage: rake racket ARGS=\"arg1 arg2...\""
+		"solumns"
 	end
 end
 
@@ -143,9 +143,20 @@ file "work" do
 	mkdir "work"
 end
 
+file "release" do
+	mkdir "release"
+end
+
+desc "Create distribution"
+task :dist => ["release"] do
+	sh "raco distribute release work/#{solumns_exe}"
+	sh "cp data release/bin -R"
+end
+
 desc "Compile"
 task :build => ["work"] do
-	sh "raco exe --gui -o work/solumns solumns/main.rkt"
+	sh "raco exe --ico data/logo.ico --gui -o work/#{solumns_exe} solumns/main.rkt"
+end
 
 desc "Wordcount"
 task :words do

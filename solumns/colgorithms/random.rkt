@@ -54,29 +54,34 @@
 					 ; Either we generate a column with 3 different colours
 					 ; or one with two different colours.
 					 (if (= choose 0)
-					   (three)
-					   (two))))
+					   (begin
+					     (log-info "randomly generating 3 column.")
+					     (three))
+					   (begin
+					     (log-info "randomly generating 2 column")
+					     (two)))))
 
 			; Generate a column with three colours
 			(define/public (three)
-			  (let [(column (vector #f #f #f))]
-			    (for/fold [(possibilities colours)]
-				      [(i (in-range 0 3))]
-				      (let [(choose (random-member possibilities))]
-					(vector-set! column i choose)
-					(set-remove possibilities choose)))
-			    column))
+				       (let [(column (vector #f #f #f))]
+					 (for/fold [(possibilities colours)]
+						   [(i (in-range 0 3))]
+						   (let [(choose (random-member possibilities))]
+						     (vector-set! column i choose)
+						     (set-remove possibilities choose)))
+					 (log-info (format "Column was: ~a\n" column))
+					 column))
 
 			; Generate a column with two colours
 			(define/public (two)
-			  (let* [(column (vector #f #f #f))
-				 (pos (random 3))
-				 (frs (random-member colours))
-				 (scn (random-member (set-remove colours frs)))]
-			    (for [(i (in-range 0 3))]
-				 (vector-set! column i (if (= i pos)
-							 frs scn)))
-			    column))))
+				       (let* [(column (vector #f #f #f))
+					      (pos (random 3))
+					      (frs (random-member colours))
+					      (scn (random-member (set-remove colours frs)))]
+					 (for [(i (in-range 0 3))]
+					      (vector-set! column i (if (= i pos)
+								      frs scn)))
+					 column))))
 
 (provide/contract
   [make-rand (-> (and/c exact-nonnegative-integer?
