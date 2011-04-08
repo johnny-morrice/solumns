@@ -1,4 +1,4 @@
-#lang racket
+#lang racket/gui
 
 ; Copyright 2011 John Morrice
 ;
@@ -38,9 +38,12 @@
 			; We time the generation of new columns
 			(define (next-column clone)
 			  (let* [(t1 (current-milliseconds))
-				 (next (super next-column clone))]
-			    (send score-board search-time
-				  (abs (- (current-milliseconds) t1)))
+				 (next (super next-column clone))
+				 (took (abs (- (current-milliseconds) t1)))]
+			    (send score-board search-time took)
+			    (when (< took 200)
+			      (log-info "Let the player catch up...")
+			      (sleep/yield 0.2))
 			    next))
 
 			; When blocks are eliminated, we count the score.
@@ -51,5 +54,5 @@
 			      (set! score (+ score (* 100 blocks-removed)))
 			      (send score-board score-now score))
 			    blocks))))
-			    
+
 

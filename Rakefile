@@ -135,9 +135,17 @@ task :test => [:test_grid, :test_random,
         :test_shuffling, :test_cycle, :test_pause_status]
 
 desc "Run solumns"
-task :solumns do
+task :run do
 	gracket "solumns/main.rkt"
 end
+
+file "work" do
+	mkdir "work"
+end
+
+desc "Compile"
+task :build => ["work"] do
+	sh "raco exe --gui -o work/solumns solumns/main.rkt"
 
 desc "Wordcount"
 task :words do

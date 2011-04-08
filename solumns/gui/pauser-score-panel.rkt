@@ -22,14 +22,6 @@
 
 (provide pauser-score-panel%)
 
-; Label on button when pressing it will pause the game
-(define pause-label
-  "Pause (spacebar)")
-
-; Label on button when pressing it will unpause the game
-(define unpause-label
-  "Unpause (spacebar)")
-
 ; Score panel that has a pause button
 (define/contract pauser-score-panel%
 		 (class/c (init-field [pause-status (is-a?/c pause-status%)]))
@@ -40,11 +32,8 @@
 
 			(new button%
 			     [parent this]
-			     [label pause-label]
+			     [label "Pause/Unpause (Spacebar)"]
 			     [callback
 			       (lambda (me evt)
-				 (if (send pause-status paused?)
-				   (send me set-label pause-label)
-				   (send me set-label unpause-label))
 				 (send pause-status toggle-pause))])))
 
