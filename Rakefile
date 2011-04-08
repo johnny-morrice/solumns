@@ -14,6 +14,16 @@ task :racket do
 	end
 end
 
+desc "Test a game where the columns are shuffled."
+task :test_shuffle do
+	gracket "test/gui/shuffler.rkt"
+end
+
+desc "Check we can shuffle a list"
+task :test_shuffling do
+	racket "test/shuffle.rkt"
+end
+
 desc "Check cycles can be detected and prevented"
 task :test_cycle do
 	racket "test/cycle-detector.rkt"
