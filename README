@@ -5,7 +5,15 @@ contact: spoon@killersmurf.com
 
 A suboptimal columns game.  Where it gives you the colours you don't want!
 
-What you need:
+Works on:
+Gentoo Linux
+Windows 7
+
+Some quick how-tos follow.
+
+HOW TO COMPILE
+
+Requirements:
 
 The racket programming language
 http://racket-lang.org/
@@ -13,6 +21,22 @@ http://racket-lang.org/
 Rake, a build tool
 http://rake.rubyforge.org/
 
-How to run:
+Instructions
 
-rake test_rotate
+rake build
+rake dist
+
+HOW TO RUN
+
+First compile and then
+
+cd release
+./solumns
+
+TO CREATE WINDOWS INSTALLER
+
+First compile and then
+
+racket installer
+
+It is left in release/solumns.msi

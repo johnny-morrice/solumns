@@ -2,7 +2,7 @@ require "fileutils"
 
 def run cmd
 	if windows?
-		sh "start #{cmd}"
+		"start #{cmd}"
 	else
 		sh cmd
 	end
@@ -181,9 +181,19 @@ task :clean do
 	FileUtils.rm_rf "release"
 end
 
+desc "Create installer"
+task :installer do
+	if windows?
+		FileUtils.cp "installer/solumns.wxs", "release"
+		sh "create-installer.bat"
+	else
+		raise "Only works on windows"
+	end
+end
+
 desc "Compile"
 task :build => ["work"] do
-	run "raco exe --gui -o work/#{solumns_exe} solumns/main.rkt"
+	run "raco exe --ico data/logo.ico --gui -o work/#{solumns_exe} solumns/main.rkt"
 end
 
 desc "Wordcount"

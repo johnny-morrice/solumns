@@ -108,8 +108,8 @@
 (define can
   (new canvas%
        [parent intro-panel]
-       [min-width 100]
-       [min-height 100]
+       [min-width 128]
+       [min-height 128]
        [stretchable-width #f]
        [stretchable-height #f]
        [paint-callback (lambda (me dc)

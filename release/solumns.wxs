@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='windows-1252'?>
+<Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
+
+	<Product Name='Solumns' Id='0cc370ae-402a-4670-b5b0-b44d0b13f067'
+		UpgradeCode='0cc370ae-402a-4670-b5b0-b44d0b13f067'
+		Language='1033' Codepage='1252' Version='0.0.1' Manufacturer='killersmurf.com'>
+
+		<Package Id='*' Keywords='Installer' Description="Solumns Installer"
+			Comments='Copyright 2011 John Morrice' Manufacturer='killersmurf.com'
+			InstallerVersion='100' Languages='1033' Compressed='yes' SummaryCodepage='1252' />
+
+		<Media Id='1' Cabinet='Solumns.cab' EmbedCab='yes' />
+
+		<Directory Id='TARGETDIR' Name='SourceDir'>
+
+			<Directory Id='ProgramFilesFolder' Name='PFiles'>
+
+				<Directory Id='killersmurf' Name='killersmurf'>
+
+					<Directory Id='INSTALLDIR' Name='Solumns 0.0.1'>
+
+						<Component Id='MainExecutable' Guid='a2ce6b96-eead-4862-a937-2ada2e33a459'>
+
+							<File Id='SolumnsEXE' Name='solumns.exe' DiskId='1'
+								Source='solumns.exe' KeyPath='yes'>
+
+								<Shortcut Id="startmenuSolumns001" Directory="ProgramMenuDir"
+									Name="Solumns" Icon="solumns.exe" IconIndex="0" Advertise="yes" />
+
+								<Shortcut Id="desktopSolumns001" Directory="DesktopFolder"
+									Name="Solumns" Icon="solumns.exe" IconIndex="0" Advertise="yes" />
+							</File>
+						</Component>
+
+					</Directory>
+
+				</Directory>
+
+			</Directory>
+
+			<Directory Id="ProgramMenuFolder" Name="Programs">
+				<Directory Id="ProgramMenuDir" Name="Solumns">
+					<Component Id="ProgramMenuDir" Guid="b244f253-b1ba-4b21-b041-32afab5f668f">
+						<RemoveFolder Id='ProgramMenuDir' On='uninstall' />
+						<RegistryValue Root='HKCU' Key='Software\Killersmurf\Solumns001' Type='string'
+							Value='' KeyPath='yes' />
+					</Component>
+				</Directory>
+			</Directory>
+
+			<Directory Id="DesktopFolder" Name="Desktop" />
+		</Directory>
+
+		<Feature Id='Complete' Level='1'>
+			<ComponentRef Id='MainExecutable' />
+			<ComponentRef Id='ProgramMenuDir' />
+		</Feature>
+
+		<Icon Id="solumns.exe" SourceFile="solumns.exe" />
+
+	</Product>
+</Wix>
+					
+
+
+
+
+
+
+
