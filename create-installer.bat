@@ -1,3 +1,3 @@
 cd release
-candle solumns.wxs
-light solumns.wixobj
+candle solumns.wxs -ext WixUIExtension
+light solumns.wixobj -ext WixUIExtension

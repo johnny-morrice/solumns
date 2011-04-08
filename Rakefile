@@ -2,7 +2,7 @@ require "fileutils"
 
 def run cmd
 	if windows?
-		"start #{cmd}"
+		sh "start #{cmd}"
 	else
 		sh cmd
 	end
@@ -185,6 +185,7 @@ desc "Create installer"
 task :installer do
 	if windows?
 		FileUtils.cp "installer/solumns.wxs", "release"
+		FileUtils.cp_r "installer/COPYING.rtf", "release"
 		sh "create-installer.bat"
 	else
 		raise "Only works on windows"

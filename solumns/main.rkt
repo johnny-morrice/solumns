@@ -95,6 +95,9 @@
   (send restarter start)
   (send game-view focus))
 
+; Set up the intro screen
+(define (create-intro)
+
 ; Panel to hold the intro stuff
 (define intro-panel
   (new vertical-panel%
@@ -193,4 +196,5 @@
 		 (send win delete-child tech-panel)
 		 (create-gui))])
 
-(send win show #t)
+(send win show #t))
+(create-intro)

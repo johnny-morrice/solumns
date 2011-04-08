@@ -25,12 +25,70 @@
 								Source='solumns.exe' KeyPath='yes'>
 
 								<Shortcut Id="startmenuSolumns001" Directory="ProgramMenuDir"
-									Name="Solumns" Icon="solumns.exe" IconIndex="0" Advertise="yes" />
+									Name="Solumns" Icon="solumns.exe" IconIndex="0" Advertise="yes"
+								       WorkingDirectory='INSTALLDIR'	/>
 
 								<Shortcut Id="desktopSolumns001" Directory="DesktopFolder"
-									Name="Solumns" Icon="solumns.exe" IconIndex="0" Advertise="yes" />
+									Name="Solumns" Icon="solumns.exe" IconIndex="0" Advertise="yes"
+									WorkingDirectory='INSTALLDIR' />
 							</File>
 						</Component>
+
+
+						<Directory Id="data" Name="data">
+
+							<Component Id='MainSolumnsLogo' Guid='636dd2dd-12f3-4867-9ed7-a54212827607'>
+
+								<File Id='SolumnsLogo' Name='logo.png' DiskId='1'
+									Source='data\logo.png' KeyPath='yes'>
+								</File>
+
+							</Component>
+
+						</Directory>
+
+						<Directory Id="lib" Name="lib">
+
+							<Component Id='IConv' Guid='f87e6c76-f981-48f2-8c53-3ed868ff5ede'>
+
+								<File Id='IConvDLL' Name='iconv.dll' DiskId='1'
+									Source='lib\iconv.dll' KeyPath='yes'>
+								</File>
+
+							</Component>
+
+							<Component Id='GracketGC' Guid='a96b375c-2e4a-4396-a57a-4592bb69bcdd'>
+
+								<File Id='GracketGCDLL' Name='libgracket3m_89or8o.dll' DiskId='1'
+									Source='lib\libgracket3m_89or8o.dll' KeyPath='yes'>
+								</File>
+							</Component>
+
+							<Component Id='RacketGC' Guid='ebd5803c-2418-4f5d-89cb-3b32f8033822'>
+
+								<File Id='RacketGCDLL' Name='libracket3m_89or8o.dll' DiskId='1'
+									Source='lib\libracket3m_89or8o.dll' KeyPath='yes'>
+								</File>
+							</Component>
+
+							<Component Id='UnicoWS' Guid='7ee812e8-298c-4d23-8c59-2e3e035b2d89'>
+
+								<File Id='UnicoWSDLL' Name='UnicoWS.dll' DiskId='1'
+									Source='lib\UnicoWS.dll' KeyPath='yes'>
+								</File>
+
+							</Component>
+
+							<Directory Id="plt" Name="plt">
+								<Directory Id="solumnsplt" Name="solumns">
+									<Directory Id="collects" Name="collects">
+									</Directory>
+									<Directory Id="exts" Name="exts">
+									</Directory>
+								</Directory>
+							</Directory>
+
+						</Directory>
 
 					</Directory>
 
@@ -53,14 +111,28 @@
 
 		<Feature Id='Complete' Level='1'>
 			<ComponentRef Id='MainExecutable' />
+			<ComponentRef Id='MainSolumnsLogo' />
 			<ComponentRef Id='ProgramMenuDir' />
+			<ComponentRef Id='IConv' />
+			<ComponentRef Id='GracketGC' />
+			<ComponentRef Id='RacketGC' />
+			<ComponentRef Id='UnicoWS' />
 		</Feature>
+
+		<Property Id="WIXUI_INSTALLDIR" Value='INSTALLDIR'>
+		</Property>
+
+		<UI>
+			<UIRef Id="WixUI_InstallDir" />
+		</UI>
+
+		<WixVariable Id="WixUILicenseRtf" Value="Copying.rtf" />
 
 		<Icon Id="solumns.exe" SourceFile="solumns.exe" />
 
 	</Product>
 </Wix>
-					
+
 
 
 
