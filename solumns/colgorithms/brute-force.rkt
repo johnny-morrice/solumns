@@ -45,38 +45,51 @@
 		 (class object%
 			(super-new)
 
-			(init colours)
+			(init-field colours)
 
 			(field [columns (permute colours)]
 			       [simple (make-rand colours)])
 
-			(public next)
+			(public next next-evil next-evil-candidate candidates next-random)
+
+			; Choose a random column
+			(define (next-random gr)
+			  (send simple next gr))
 
 			; Find the next column by bruteforce search of the entire input space
 			; if the grid is empty, give a random column
 			(define (next gr)
 			  (if (unsafe-fx= (send gr size) 0)
-			    (send simple next gr)
-			    (let* [(heights (send gr heights))
-				   (next-positions
-				     (for/list [(x (in-range 0 (length heights)))
-						(y (in-list heights))]
-					       (list x y)))
-				   (candidates
-				     (map (lambda (cols)
-					    (list (car cols)
-						  (argmin (lambda (gr)
-							    (send gr size))
-							  (flatten (map (lambda (col)
-									  (possible-positions gr col next-positions))
-									cols)))))
-					  columns))]
+			    (next-random gr)
+			    (next-evil gr)))
 
-			      ; Get the most difficult grid!
-			      (car (argmax
-				     (lambda (cnd)
-				       (send (cadr cnd) size))
-				     candidates)))))
+			; Create the next evil column
+			(define (next-evil gr)
+			    (car (send this next-evil-candidate (send this candidates gr))))
+
+			; Create the candidates, a list of evil columns
+			(define (candidates gr)
+			  (let* [(heights (send gr heights))
+				 (next-positions
+				   (for/list [(x (in-range 0 (length heights)))
+					      (y (in-list heights))]
+					     (list x y)))]
+			    (map (lambda (cols)
+				   (list (car cols)
+					 (argmin (lambda (gr)
+						   (send gr size))
+						 (flatten (map (lambda (col)
+								 (possible-positions gr col next-positions))
+							       cols)))))
+				 columns)))
+
+			; Get the hardest grid
+			(define (next-evil-candidate cands)
+			  ; Get the most difficult grid!
+			  (argmax
+			    (lambda (cnd)
+			      (send (cadr cnd) size))
+			    cands))
 
 			; Produce every possible position of the column in the grid
 			(define (possible-positions gr col next-positions)
@@ -120,8 +133,8 @@
     (let doubles [(vs (list '#(0 1 1)))]
       (let [(u (car vs))]
 	(if (not (equal? u ending))
-		 (doubles (cons (next-double n (car vs)) vs))
-		 vs)))))
+	  (doubles (cons (next-double n (car vs)) vs))
+	  vs)))))
 
 ; Creates all possible columns given n colours.
 ;

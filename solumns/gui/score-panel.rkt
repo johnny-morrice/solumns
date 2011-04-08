@@ -24,7 +24,7 @@
 (define/contract score-panel%
   (class/c [score-now (->m exact-nonnegative-integer?
 			   void)]
-	   [search-time (->m (and/c real? positive?)
+	   [search-time (->m (and/c real? (or/c zero? positive?))
 				 void)])
 
   (class vertical-panel%

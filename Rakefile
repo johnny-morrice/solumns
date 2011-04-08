@@ -14,9 +14,24 @@ task :racket do
 	end
 end
 
+desc "Check cycles can be detected and prevented"
+task :test_cycle do
+	racket "test/cycle-detector.rkt"
+end
+
+desc "Check that we can play a game without cycles occuring"
+task :test_acyclic do
+	gracket "test/gui/acyclic.rkt"
+end
+
 desc "Check the GUI looks correct."
 task :test_draw do
 	gracket "test/gui/draw.rkt"
+end
+
+desc "Test a game that occasionally gives random columns to reduce cycles."
+task :test_occasional do
+	gracket "test/gui/occasional.rkt"
 end
 
 desc "Check the GUI can be resized and redrawn okay."

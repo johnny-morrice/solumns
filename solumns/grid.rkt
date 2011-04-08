@@ -73,7 +73,9 @@
 				    void)]
 		   [matrix-ref (->m exact-nonnegative-integer?
 				    exact-nonnegative-integer?
-				    (or/c #f exact-nonnegative-integer?))])
+				    (or/c #f exact-nonnegative-integer?))]
+		   [greq? (->m (is-a?/c grid%)
+				boolean?)])
 
 		 (class object%
 			(super-new)
@@ -87,7 +89,12 @@
 			; Mostly we expose so much so that the testing module can get at them
 			; better to do this with module hiding
 			(public gravity elimination-step add-column visit-squares visit-squares-matrix all-colours clone lost?
-				size reduce matrix-set! can-occupy? drop-until heights tag around matrix-ref)
+				size reduce matrix-set! can-occupy? drop-until heights tag around matrix-ref greq?)
+
+			; Is the other grid the same as this?
+			(define (greq? other)
+			  (equal? (all-colours)
+				  (send other all-colours)))
 
 			; Return the heights of each column in a list.
 			(define (heights)
