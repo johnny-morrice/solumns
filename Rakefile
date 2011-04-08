@@ -109,14 +109,30 @@ task :test_bruteforce do
 	racket "test/brute-force.rkt"
 end
 
+desc "Test the pause status machine is sane"
+task :test_pause_status do
+	racket "test/pause.rkt"
+end
+
+desc "Test a game that can be paused"
+task :test_pause do
+	gracket "test/gui/pauser.rkt"
+end
+
 desc "Test generation of random columns."
 task :test_random do
 	racket "test/random.rkt"
 end
 
+desc "Test game where output columns are randomly rotated."
+task :test_rotate do
+	gracket "test/gui/rotator.rkt"
+end
+
 desc "Run all (automated) tests"
 task :test => [:test_grid, :test_random,
-	:test_bruteforce, :test_cmap, :test_record]
+	:test_bruteforce, :test_cmap, :test_record,
+        :test_shuffling, :test_cycle, :test_pause_status]
 
 desc "Run solumns"
 task :solumns do

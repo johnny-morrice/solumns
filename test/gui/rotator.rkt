@@ -1,18 +1,22 @@
 #lang racket/gui
 
-(require "../../solumns/gui/panel.rkt"
+(require "../../solumns/gui/pauser-panel.rkt"
 	 "../../solumns/gui/grid-fader.rkt"
 	 "../../solumns/gui/fader-canvas.rkt"
-	 "../../solumns/gui/restarter-score-panel.rkt"
-	 "../../solumns/gui/controllers/shuffler.rkt"
+	 "../../solumns/gui/pauser-score-panel.rkt"
+	 "../../solumns/gui/controllers/pauser.rkt"
+	 "../../solumns/gui/pause-status.rkt"
 	 "../../solumns/grid.rkt"
-	 "../../solumns/colgorithms/shuffler.rkt")
+	 "../../solumns/colgorithms/rotator.rkt")
 
 (define win
   (new frame%
-       [label "Test Solums Game with shuffled columns hence unique games."]
+       [label "Test Solums Game that randomly rotates generated columns."]
        [width 600]
        [height 800]))
+
+(define pause
+  (new pause-status%))
 
 (define (create-gui)
   (define hoz
@@ -24,10 +28,11 @@
 	 [height 15]))
 
   (define brute
-    (new shuffler% [colours 9]))
+    (new rotator% [colours 9]))
 
   (define game-view
-    (new solumns-panel%
+    (new pauser-panel%
+	 [pause-status pause]
 	 [parent hoz]
 	 [min-width 400]))
 
@@ -44,14 +49,16 @@
 	 [grid gr]))
 
   (define hud
-    (new restarter-score-panel%
+    (new pauser-score-panel%
+	 [pause-status pause]
 	 [parent hoz]
 	 [alignment '(left center)]
 	 [min-width 200]
 	 [stretchable-width #f]))
 
   (define restarter 
-    (new shuffler-controller%
+    (new pauser-controller%
+	 [pause-status pause]
 	 [game-delay 0.03]
 	 [acceleration 0.0001]
 	 [gravity-delay 0.4]

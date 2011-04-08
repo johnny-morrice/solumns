@@ -17,13 +17,15 @@
 ; You should have received a copy of the GNU General Public License
 ; along with Solumns.  If not, see <http://www.gnu.org/licenses/>.
 
-(require "high-scorer.rkt")
+(require "high-scorer.rkt"
+	 "../restarter-score-panel.rkt")
 
 (provide restarter-controller%)
 
 ; A solumns controller that will let you restart the game.
 (define/contract restarter-controller%
-		   (class/c (init-field [restart-callback (-> void)]))
+		   (class/c (init-field [restart-callback (-> void)]
+					[score-board (is-a?/c restarter-score-panel%)]))
 
 		   (class high-score-controller%
 			  (super-new)
@@ -36,12 +38,9 @@
 			  ; that restarts the game
 			  (define (make-restart-button)
 			    (log-info "making restart button")
-			    (new button%
-				 [parent (get-field score-board this)]
-				 [label "Play again"]
-				 [callback
-				   (lambda (me evt)
-				     (restart-callback))]))
+			    (send (get-field score-board this) make-restart-button
+				  (lambda (me evt)
+				     (restart-callback))))
 
 			  ; When the high score is saved, create the
 			  ; restart game button

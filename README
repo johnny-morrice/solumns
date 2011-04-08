@@ -15,4 +15,4 @@ http://rake.rubyforge.org/
 
 How to run:
 
-rake test_fade
+rake test_rotate
