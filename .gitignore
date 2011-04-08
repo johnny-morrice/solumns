@@ -2,3 +2,6 @@
 *~
 *.zo
 *.dep
+*.exe
+work/
+dist/solumns
