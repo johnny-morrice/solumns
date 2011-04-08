@@ -1,9 +1,19 @@
+require "fileutils"
+
+def run cmd
+	if windows?
+		sh "start #{cmd}"
+	else
+		sh cmd
+	end
+end
+
 def gracket args
-	sh "gracket -W info -l errortrace -t #{args}"
+	run "gracket -W info -l errortrace -t #{args}"
 end
 
 def racket args
-	sh "racket -W info -l errortrace -t #{args}"
+	run "racket -W info -l errortrace -t #{args}"
 end
 
 def windows?
@@ -18,11 +28,11 @@ def solumns_exe
 	end
 end
 
-def recursive_copy source, dest
+def release_exe_dir
 	if windows?
-		sh "XCOPY #{source} #{dest} /S"
+		"release"
 	else
-		sh "cp -R #{source} #{dest}"
+		"release/bin"
 	end
 end
 
@@ -161,16 +171,22 @@ end
 
 desc "Create distribution"
 task :dist => ["release"] do
-	sh "raco distribute release work/#{solumns_exe}"
-	recursive_copy "data", "release/bin"
+	run "raco distribute release work/#{solumns_exe}"
+	FileUtils.cp_r "data", release_exe_dir
+end
+
+desc "Clean"
+task :clean do
+	FileUtils.rm_rf "work"
+	FileUtils.rm_rf "release"
 end
 
 desc "Compile"
 task :build => ["work"] do
-	sh "raco exe --ico data/logo.ico --gui -o work/#{solumns_exe} solumns/main.rkt"
+	run "raco exe --gui -o work/#{solumns_exe} solumns/main.rkt"
 end
 
 desc "Wordcount"
 task :words do
-	sh "wc `find -regex '.+.rkt'` | sort -n"
+	run "wc `find -regex '.+.rkt'` | sort -n"
 end

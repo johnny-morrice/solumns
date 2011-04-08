@@ -38,7 +38,7 @@
 
   (define can
     (new fader-canvas%
-	 [frame-delay 0.03]
+	 [frame-delay 0.01]
 	 [grid gr]
 	 [parent game-view]))
 

@@ -3,5 +3,7 @@
 *.zo
 *.dep
 *.exe
+*.bak
 work/
-dist/solumns
+dist/
+
