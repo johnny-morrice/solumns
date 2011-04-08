@@ -6,11 +6,23 @@ def racket args
 	sh "racket -W info -l errortrace -t #{args}"
 end
 
+def windows?
+	RUBY_PLATFORM =~ /(win|w)32$/
+end
+
 def solumns_exe
-	if RUBY_PLATFORM =~ /(win|w)32$/
+	if windows? 
 		"solumns.exe"
 	else
 		"solumns"
+	end
+end
+
+def recursive_copy source, dest
+	if windows?
+		sh "XCOPY #{source} #{dest} /S"
+	else
+		sh "cp -R #{source} #{dest}"
 	end
 end
 
@@ -150,7 +162,7 @@ end
 desc "Create distribution"
 task :dist => ["release"] do
 	sh "raco distribute release work/#{solumns_exe}"
-	sh "cp data release/bin -R"
+	recursive_copy "data", "release/bin"
 end
 
 desc "Compile"
