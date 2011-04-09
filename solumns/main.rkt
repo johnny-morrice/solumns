@@ -80,7 +80,7 @@
 	 [pause-status pause]
 	 [game-delay 0.03]
 	 [acceleration 0.0001]
-	 [gravity-delay 0.4]
+	 [gravity-delay 0.2]
 	 [model screen]
 	 [grid gr]
 	 [colgorithm brute]
@@ -98,103 +98,103 @@
 ; Set up the intro screen
 (define (create-intro)
 
-; Panel to hold the intro stuff
-(define intro-panel
-  (new vertical-panel%
-       [parent win]
-       [alignment '(center center)]))
+  ; Panel to hold the intro stuff
+  (define intro-panel
+    (new vertical-panel%
+	 [parent win]
+	 [alignment '(center center)]))
 
-; Show the solumns logo
-(define logo
-  (make-object bitmap% "data/logo.png" 'png))
+  ; Show the solumns logo
+  (define logo
+    (make-object bitmap% "data/logo.png" 'png))
 
-(define can
-  (new canvas%
+  (define can
+    (new canvas%
+	 [parent intro-panel]
+	 [min-width 128]
+	 [min-height 128]
+	 [stretchable-width #f]
+	 [stretchable-height #f]
+	 [paint-callback (lambda (me dc)
+			   (send dc draw-bitmap logo 0 0))]))
+
+  ; Write some instructions
+  (new message%
        [parent intro-panel]
-       [min-width 128]
-       [min-height 128]
-       [stretchable-width #f]
-       [stretchable-height #f]
-       [paint-callback (lambda (me dc)
-			 (send dc draw-bitmap logo 0 0))]))
+       [font (make-object font% 18 'default 'normal 'bold)]
+       [label "SOLUMNS"])
 
-; Write some instructions
-(new message%
-     [parent intro-panel]
-     [font (make-object font% 18 'default 'normal 'bold)]
-     [label "SOLUMNS"])
+  (new message%
+       [parent intro-panel]
+       [label "Solumns is an evil colour matching game."])
 
-(new message%
-     [parent intro-panel]
-     [label "Solumns is an evil colour matching game."])
+  (new message%
+       [parent intro-panel]
+       [label "Columns fall from the sky."])
 
-(new message%
-     [parent intro-panel]
-     [label "Columns fall from the sky."])
+  (new message%
+       [parent intro-panel]
+       [label "Use the arrow keys to move them."])
 
-(new message%
-     [parent intro-panel]
-     [label "Use the arrow keys to move them."])
+  (new message%
+       [parent intro-panel]
+       [label "The up key cycles the colours."])
 
-(new message%
-     [parent intro-panel]
-     [label "The up key cycles the colours."])
+  (new message%
+       [parent intro-panel]
+       [label "Prevent the grid becoming full by eliminating squares"])
 
-(new message%
-     [parent intro-panel]
-     [label "Prevent the grid becoming full by eliminating squares"])
+  (new message%
+       [parent intro-panel]
+       [label "Three or more squares of the same colour are eliminated if they are touching."])
 
-(new message%
-     [parent intro-panel]
-     [label "Three or more squares of the same colour are eliminated if they are touching."])
+  (new message%
+       [parent intro-panel]
+       [label "Sounds simple?"])
 
-(new message%
-     [parent intro-panel]
-     [label "Sounds simple?"])
+  (new message%
+       [parent intro-panel]
+       [label "Not quite: most of the time, Solumns will give you evil combinations of colours."])
 
-(new message%
-     [parent intro-panel]
-     [label "Not quite: Solumns will give you evil combinations of colours."])
+  ; Panel for legal and tech info
+  (define tech-panel
+    (new vertical-panel%
+	 [parent win]
+	 [alignment '(center bottom)]))
 
-; Panel for legal and tech info
-(define tech-panel
-  (new vertical-panel%
-       [parent win]
-       [alignment '(center bottom)]))
+  (new button%
+       [parent tech-panel]
+       [label "Visit http://killersmurf.com for more fun stuff."]
+       [callback
+	 (lambda (me evt)
+	   (send-url "http://killersmurf.com"))])
 
-(new button%
-     [parent tech-panel]
-     [label "Visit http://killersmurf.com for more fun stuff."]
-     [callback
-       (lambda (me evt)
-	 (send-url "http://killersmurf.com"))])
+  (new message%
+       [parent tech-panel]
+       [label "This is an alpha release of solumns."])
 
-(new message%
-     [parent tech-panel]
-     [label "This is an alpha release of solumns."])
+  (new message%
+       [parent tech-panel]
+       [label "Your Mileage May Vary"])
 
-(new message%
-     [parent tech-panel]
-     [label "Your Mileage May Vary"])
+  (new message%
+       [parent tech-panel]
+       [label "Report bugs to spoon@killersmurf.com"])
 
-(new message%
-     [parent tech-panel]
-     [label "Report bugs to spoon@killersmurf.com"])
+  (new message%
+       [parent tech-panel]
+       [label "Copyright 2011 John Morrice"])
 
-(new message%
-     [parent tech-panel]
-     [label "Copyright 2011 John Morrice"])
+  (new button%
+       [parent intro-panel]
+       [min-width 100]
+       [min-height 80]
+       [vert-margin 30]
+       [label "Play"]
+       [callback (lambda (me evt)
+		   (send win delete-child intro-panel)
+		   (send win delete-child tech-panel)
+		   (create-gui))])
 
-(new button%
-     [parent intro-panel]
-     [min-width 100]
-     [min-height 80]
-     [vert-margin 30]
-     [label "Play"]
-     [callback (lambda (me evt)
-		 (send win delete-child intro-panel)
-		 (send win delete-child tech-panel)
-		 (create-gui))])
-
-(send win show #t))
+  (send win show #t))
 (create-intro)
