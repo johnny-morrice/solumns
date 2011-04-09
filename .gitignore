@@ -5,5 +5,5 @@
 *.exe
 *.bak
 work/
-dist/
+release/
 
