@@ -67,12 +67,13 @@
 
 			; When you lose, try to record a high score.
 			(define (lose)
-			  (let [(old-scores (get-high-scores))
-				(new-score (list #f (get-field score this)))]
-			    (if (null? old-scores)
-			      (new-high-score (list new-score))
+			  (let* [(old-scores (get-high-scores))
+				(new-score (list #f (get-field score this)))
+                                (me-scorer (cons new-score old-scores))]
+			    (if (< (length old-scores) 10)
+			      (new-high-score me-scorer)
 			      (if (< (cadar (sort-scores old-scores)) (get-field score this))
-				(new-high-score (cons new-score old-scores))
+				(new-high-score me-scorer)
 				(send this on-no-high-score)))
 			    (super lose)))
 
