@@ -197,4 +197,5 @@
 		   (create-gui))])
 
   (send win show #t))
+
 (create-intro)

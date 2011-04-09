@@ -16,6 +16,7 @@ HOW TO COMPILE
 Requirements:
 
 The racket programming language
+Version 5.0.1
 http://racket-lang.org/
 
 Rake, a build tool
