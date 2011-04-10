@@ -17,17 +17,45 @@
 ; You should have received a copy of the GNU General Public License
 ; along with Solumns.  If not, see <http://www.gnu.org/licenses/>.
 
+; The colours
+(define red
+  '(0.9 0.0 0.0))
+
+(define yellow
+  '(0.9 0.9 0))
+
+(define green
+  '(0.14 0.54 0.14))
+
+(define blue
+  '(0.15 0.25 0.54))
+
+(define linen 
+  '(0.98 0.94 0.90))
+
+(define purple
+'(0.407 0.09 0.55))
+
+(define grey
+  '(0.51 0.51 0.51))
+
+(define brown
+  '(0.36 0.25 0.2))
+
+(define skin 
+  '(1.0 0.501 0.478))
+
 ; A hash of colour numbers as used by colgorithms to colors
 (define colour-table
-  (hash 0 '(0.9 0.0 0.0)
-	1 '(0.9 0.9 0)
-	2 '(0.0 0.9 0)
-	3 '(0.0 0.0 0.9)
-	4 '(0.0 0.81 0.81)
-	5 '(0.87 0.0 1.0)
-	6 '(0.45 0.45 0.45)
-	7 '(0.545 0.32 0.176)
-	8 '(0.91 0.588 0.478)))
+  (hash 0 red
+	1 yellow
+	2 green
+	3 blue
+	4 linen
+	5 purple
+	6 grey
+	7 brown
+	8 skin))
 
 
 ; Map integers or #f to colours, recognised by gracket
