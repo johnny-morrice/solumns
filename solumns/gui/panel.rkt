@@ -40,13 +40,15 @@
 
 			(define (on-subwindow-char receiver event)
 			  (when controller
-			    (case (send event get-key-code)
-			      [(left)   (send controller left-press)]
-			      [(right)  (send controller right-press)]
-			      [(up)     (send controller up-press)]
-			      [(down)   (send controller down-press)]
-			      [(release) (case (send event get-key-release-code)
-					   [(down)  (send controller down-release)])])))
+			    (let [(kc (send event get-key-code))]
+			      (log-info (format "key-code: ~a\n" kc))
+			      (case kc
+				[(left)   (send controller left-press)]
+				[(right)  (send controller right-press)]
+				[(up)     (send controller up-press)]
+				[(down)   (send controller down-press)]
+				[(release) (case (send event get-key-release-code)
+					     [(down)  (send controller down-release)])]))))
 
 			(define (on-superwindow-show shown?)
 			  (super on-superwindow-show shown?)

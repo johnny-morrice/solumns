@@ -3,7 +3,7 @@
 (require "../../solumns/gui/panel.rkt"
 	 "../../solumns/gui/grid.rkt"
 	 "../../solumns/gui/grid-canvas.rkt"
-	 "../../solumns/gui/score-panel.rkt"
+	 "../../solumns/gui/restarter-score-panel.rkt"
 	 "../../solumns/gui/controllers/restarter.rkt"
 	 "../../solumns/grid.rkt"
 	 "../../solumns/colgorithms/brute-force.rkt")
@@ -44,7 +44,7 @@
 	 [grid gr]))
 
   (define hud
-    (new score-panel%
+    (new restarter-score-panel%
 	 [parent hoz]
 	 [alignment '(left center)]
 	 [min-width 200]

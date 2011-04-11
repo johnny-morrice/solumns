@@ -27,10 +27,11 @@
 ; Create the GUI grid
 (define canvas
   (new grid-canvas%
+       [frame-delay 0.03]
        [parent win]
        [grid gr]))
 
-(send canvas falling (dropper 2 3 '#(6 2 4)))
+(send canvas falling (dropper 2 3 '#(6 7 8)))
 (send win show #t) 
 
 (thread (lambda ()
