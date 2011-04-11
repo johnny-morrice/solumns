@@ -20,22 +20,6 @@ def windows?
 	RUBY_PLATFORM =~ /(win|w)32$/
 end
 
-def solumns_exe
-	if windows? 
-		"solumns.exe"
-	else
-		"solumns"
-	end
-end
-
-def release_exe_dir
-	if windows?
-		"release"
-	else
-		"release/bin"
-	end
-end
-
 desc "Test a game where the columns are shuffled."
 task :test_shuffle do
 	gracket "test/gui/shuffler.rkt"
@@ -154,7 +138,7 @@ end
 desc "Run all (automated) tests"
 task :test => [:test_grid, :test_random,
 	:test_bruteforce, :test_cmap, :test_record,
-        :test_shuffling, :test_cycle, :test_pause_status]
+	:test_shuffling, :test_cycle, :test_pause_status]
 
 desc "Run solumns"
 task :run do
@@ -171,8 +155,12 @@ end
 
 desc "Create distribution"
 task :dist => ["release"] do
-	run "raco distribute release work/#{solumns_exe}"
-	FileUtils.cp_r "data", release_exe_dir
+	if windows?
+		sh "windows/release.bat"
+	else
+		sh "raco distribute release work/solumns"
+		FileUtils.cp_r "data", "release/" 
+	end
 end
 
 desc "Clean"
@@ -181,12 +169,12 @@ task :clean do
 	FileUtils.rm_rf "release"
 end
 
-desc "Create installer"
-task :installer do
+desc "Create windows installer"
+task :wix => [:build, :dist] do
 	if windows?
 		FileUtils.cp "installer/solumns.wxs", "release"
 		FileUtils.cp_r "installer/COPYING.rtf", "release"
-		sh "create-installer.bat"
+		sh "windows/create-installer.bat"
 	else
 		raise "Only works on windows"
 	end
@@ -194,7 +182,11 @@ end
 
 desc "Compile"
 task :build => ["work"] do
-	run "raco exe --ico data/logo.ico --gui -o work/#{solumns_exe} solumns/main.rkt"
+	if windows?
+		sh "windows/build.bat"
+	else
+		sh "raco exe --gui -o work/solumns solumns/main.rkt"
+	end
 end
 
 desc "Wordcount"
