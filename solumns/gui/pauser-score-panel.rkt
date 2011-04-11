@@ -17,23 +17,16 @@
 ; You should have received a copy of the GNU General Public License
 ; along with Solumns.  If not, see <http://www.gnu.org/licenses/>.
 
-(require "restarter-score-panel.rkt"
-	 "pause-status.rkt")
+(require "restarter-score-panel.rkt")
 
 (provide pauser-score-panel%)
 
-; Score panel that has a pause button
-(define/contract pauser-score-panel%
-		 (class/c (init-field [pause-status (is-a?/c pause-status%)]))
+; Score panel that tells the user they can pause.
+(define pauser-score-panel%
 		 (class restarter-score-panel%
 			(super-new)
 
-			(init-field pause-status)
-
-			(new button%
+			(new message%
 			     [parent this]
-			     [label "Pause/Unpause (Spacebar)"]
-			     [callback
-			       (lambda (me evt)
-				 (send pause-status toggle-pause))])))
+			     [label "Pause/unpause with spacebar."])))
 
