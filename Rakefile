@@ -159,8 +159,8 @@ task :dist => ["release"] do
 		sh "windows/release.bat"
 	else
 		sh "raco distribute release work/solumns"
-		FileUtils.cp_r "data", "release/" 
 	end
+	FileUtils.cp_r "data", "release/"
 end
 
 desc "Clean"
@@ -172,8 +172,8 @@ end
 desc "Create windows installer"
 task :wix => [:build, :dist] do
 	if windows?
-		FileUtils.cp "installer/solumns.wxs", "release"
-		FileUtils.cp_r "installer/COPYING.rtf", "release"
+		FileUtils.cp "windows/installer/solumns.wxs", "release"
+		FileUtils.cp_r "windows/installer/COPYING.rtf", "release"
 		sh "windows/create-installer.bat"
 	else
 		raise "Only works on windows"
