@@ -4,7 +4,7 @@
 	 "../solumns/colgorithms/brute-force.rkt")
 
 (define brute
-  (new brute-force% [colours 7]))
+  (new brute-force% [colours 9]))
 
 (define gr
   (new grid% [width 7] [height 9]))
