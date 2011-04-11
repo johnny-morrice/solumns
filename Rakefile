@@ -248,7 +248,8 @@ task :udeb => [:clean, :unix_build, :dist] do
 			FileUtils.cp "ubuntu/copyright", doc_path
 			FileUtils.cp "ubuntu/menu", "#{menu_path}/solumns"
 			FileUtils.cp "ubuntu/solumns.desktop", desktop_path
-			sh "cd release/ubuntu && dpkg-deb --build #{deb_name}"
+			FileUtils.cp "ubuntu/build-package.sh", "release/ubuntu"
+			sh "cd release/ubuntu && fakeroot ./build-package.sh"
 		else
 			udeb_usage_error
 		end
