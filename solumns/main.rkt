@@ -69,7 +69,6 @@
 
   (define hud
     (new pauser-score-panel%
-	 [pause-status pause]
 	 [parent hoz]
 	 [alignment '(left center)]
 	 [min-width 150]

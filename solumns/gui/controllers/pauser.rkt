@@ -30,9 +30,38 @@
 
 			(init-field pause-status)
 
-			(override step)
+			(override step left-press right-press up-press down-press down-release)
 
-			; Don't run if it's paused.
-			(define (step)
+			(define (unless-paused f)
 			  (unless (send pause-status paused?)
-			    (super step)))))
+			    (f)))
+
+			(define (left-press)
+			  (unless-paused
+			    (lambda ()
+			      (super left-press))))
+
+			(define (right-press)
+			  (unless-paused
+			    (lambda ()
+			      (super right-press))))
+
+			(define (up-press)
+			  (unless-paused
+			    (lambda ()
+			      (super up-press))))
+
+			(define (down-press)
+			  (unless-paused
+			    (lambda ()
+			      (super down-press))))
+
+			(define (down-release)
+			  (unless-paused
+			    (lambda ()
+			      (super down-release))))
+
+			(define (step)
+			  (unless-paused
+			    (lambda ()
+			      (super step))))))

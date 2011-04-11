@@ -23,10 +23,10 @@
 
 ; Score panel that tells the user they can pause.
 (define pauser-score-panel%
-		 (class restarter-score-panel%
-			(super-new)
+  (class restarter-score-panel%
+	 (super-new)
 
-			(new message%
-			     [parent this]
-			     [label "Pause/unpause with spacebar."])))
+	 (new message%
+	      [parent this]
+	      [label "Pause/unpause with spacebar."])))
 
