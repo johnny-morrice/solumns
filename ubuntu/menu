@@ -1,0 +1,2 @@
+?package(solumns):command="/usr/bin/solumns" icon="/usr/share/pixmaps/solumns.xpm" needs="X11" \
+	section="Games/Puzzles" title="Solumns" 

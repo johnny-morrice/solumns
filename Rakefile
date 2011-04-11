@@ -141,7 +141,7 @@ task :test => [:test_grid, :test_random,
 	:test_shuffling, :test_cycle, :test_pause_status]
 
 desc "Run solumns"
-task :run do
+task :run => [:local_logo] do
 	gracket "solumns/main.rkt"
 end
 
@@ -170,22 +170,91 @@ task :clean do
 end
 
 desc "Create windows installer"
-task :wix => [:build, :dist] do
+task :wix => [:local_build, :dist] do
 	if windows?
 		FileUtils.cp "windows/installer/solumns.wxs", "release"
-		FileUtils.cp_r "windows/installer/COPYING.rtf", "release"
+		FileUtils.cp "windows/installer/COPYING.rtf", "release"
 		sh "windows/create-installer.bat"
 	else
 		raise "Only works on windows"
 	end
 end
 
-desc "Compile"
 task :build => ["work"] do
 	if windows?
 		sh "windows/build.bat"
 	else
 		sh "raco exe --gui -o work/solumns solumns/main.rkt"
+	end
+end
+
+task :local_logo do
+	FileUtils.cp "hack/local-logo.rkt", "hack/logo-dir.rkt"
+end
+
+task :unix_logo do
+	FileUtils.cp "hack/unix-logo.rkt", "hack/logo-dir.rkt"
+end
+
+desc "Compile with a local logo"
+task :local_build => [:local_logo, :build]
+
+desc "Compile with a unix logo"
+task :unix_build => [:unix_logo, :build]
+
+def udeb_usage_message
+	"rake dh_make VERSION=x.y-z"
+end
+
+def udeb_usage_error
+	raise udeb_usage_message
+end
+
+desc "Build ubuntu .deb package.  #{udeb_usage_message}"
+task :udeb => [:clean, :unix_build, :dist] do
+	ver = ENV["VERSION"]
+	if ver
+		if ver =~ /^(\d+)\.(\d+)-(\d+)$/
+			deb_name = "solumns-#{ver}"
+			package_path = "release/ubuntu/#{deb_name}"
+			fs_path = "#{package_path}/usr/"
+			share_path = "#{fs_path}/share/"
+			logo_path = "#{share_path}/solumns/"
+			pixmap_path = "#{share_path}/pixmaps/"
+			icon_path = "#{share_path}/icons/"
+			doc_path = "#{share_path}/doc/solumns/"
+			menu_path = "#{share_path}/menu/"
+			debian_path = "#{package_path}/DEBIAN/"
+			desktop_path = "#{share_path}/applications"
+			games_path = "#{fs_path}/games/"
+			FileUtils.mkdir_p package_path
+			FileUtils.mkdir_p share_path
+			FileUtils.mkdir_p  debian_path
+			FileUtils.mkdir_p logo_path
+			FileUtils.mkdir_p icon_path
+			FileUtils.mkdir_p pixmap_path
+			FileUtils.mkdir_p doc_path
+			FileUtils.mkdir_p menu_path
+			FileUtils.mkdir_p desktop_path
+			FileUtils.mkdir_p games_path
+			FileUtils.cp "release/bin/solumns", games_path
+			FileUtils.cp_r "release/lib", fs_path
+			FileUtils.cp "data/logo.png", logo_path
+			FileUtils.cp_r "data/hicolor", icon_path
+			FileUtils.cp "data/solumns.xpm", pixmap_path
+			FileUtils.cp "ubuntu/control", debian_path
+			FileUtils.cp "ubuntu/postinst", debian_path
+			FileUtils.cp "ubuntu/postrm", debian_path
+			FileUtils.cp "ubuntu/copyright", doc_path
+			FileUtils.cp "ubuntu/menu", "#{menu_path}/solumns"
+			FileUtils.cp "ubuntu/solumns.desktop", desktop_path
+			sh "cd release/ubuntu && dpkg-deb --build #{deb_name}"
+		else
+			udeb_usage_error
+		end
+
+	else
+		udeb_usage_error
 	end
 end
 

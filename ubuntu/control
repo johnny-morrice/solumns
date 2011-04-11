@@ -1,0 +1,14 @@
+Package: solumns
+Section: games
+Priority: optional
+Version: 0.0-2
+Maintainer: John Morrice <spoon@killersmurf.com>
+Homepage: http://killersmurf.com/solumns.html
+Architecture: i386
+Depends:   debhelper (>= 5), libc6 (>= 2.11), libcairo2 (>= 1.2.4), libfontconfig1 (>= 2.8.0), libgcc1 (>= 1:4.1.1), libgl1-mesa-glx | libgl1, libice6 (>= 1:1.0.0), libjpeg62, libpng12-0 (>= 1.2.13-4), libsm6, libstdc++6 (>= 4.1.1), libx11-6, libxaw7, libxext6, libxft2 (>> 2.1.1), libxmu6, libxrender1, libxt6
+Description: Evil columns variant
+ Solumns is an evil colour matching game, similar to the classic sega game "Columns".
+ .
+ It is evil because it gives the player annoyingly poor combinations of colours.
+ .
+ This may lead to swearing.

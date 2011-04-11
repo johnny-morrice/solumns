@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Solumns
+Comment=Swear at your computer with this evil game
+Exec=/usr/games/solumns
+Icon=solumns
+Terminal=false
+Type=Application
+Categories=Game;LogicGame;BlocksGame;
+Version=0.0-2

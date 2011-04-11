@@ -9,8 +9,8 @@
 	 "grid.rkt"
 	 "colgorithms/rotator.rkt"
 	 "util.rkt"
-	 net/sendurl
-	 racket/runtime-path)
+	 "../hack/logo-dir.rkt"
+	 net/sendurl)
 
 (define win-width 400)
 (define win-height 600)
@@ -106,7 +106,7 @@
 
   ; Show the solumns logo
   (define logo
-    (make-object bitmap% "data/logo.png" 'png))
+    (make-object bitmap% logo-path 'png))
 
   (define can
     (new canvas%
