@@ -4,4 +4,4 @@
 
 (provide logo-path)
 
-(define logo-path "/usr/share/solumns/logo.png")
+(define logo-path "data/logo.png")
