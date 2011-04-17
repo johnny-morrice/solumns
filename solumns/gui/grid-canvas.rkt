@@ -34,7 +34,8 @@
 			  	      [grid (is-a?/c grid%)]))
 
 		 (class canvas%
-			(super-new [style '(no-autoclear)])
+			(super-new [style '(no-autoclear gl)]
+				   [gl-config (new gl-config%)])
 
 			(public falling remove-falling draw-grid render-square shades)
 			(override on-paint)

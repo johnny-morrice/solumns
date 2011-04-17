@@ -12,6 +12,9 @@
 	 "../hack/logo-dir.rkt"
 	 net/sendurl)
 
+; This file needs sorting out... too many different concerns in here.
+; E.g. geometry management should be kept separate from game instructions.
+
 (define win-width 400)
 (define win-height 600)
 
@@ -20,12 +23,23 @@
 		    (set! win-height (round-exact (* 0.8 sh)))
 		    (set! win-width (round-exact (* 0.8 win-height)))))
 
+; The solumns logo
+(define logo
+  (make-object bitmap% (build-path logo-dir "logo.png") 'png))
+
+; The little solumns window icon
+(define frame-icon
+  (make-object bitmap% (build-path logo-dir "solumns-frame-icon.png")))
+
 ; The window takes up most of the screen.
 (define win
   (new frame%
        [label "Solumns :("]
        [width win-width]
        [height win-height]))
+
+; Set the icon
+(send win set-icon frame-icon)
 
 ; Tracks the state of the game being paused
 (define pause
@@ -94,6 +108,11 @@
   (send restarter start)
   (send game-view focus))
 
+; The left of an object to be drawn in the centre of the window
+(define (my-left width)
+  (let [(middle (/ win-width 2))]
+    (- middle (/ width 2))))
+
 ; Set up the intro screen
 (define (create-intro)
 
@@ -103,19 +122,19 @@
 	 [parent win]
 	 [alignment '(center center)]))
 
-  ; Show the solumns logo
-  (define logo
-    (make-object bitmap% logo-path 'png))
-
-  (define can
-    (new canvas%
-	 [parent intro-panel]
-	 [min-width 128]
-	 [min-height 128]
-	 [stretchable-width #f]
-	 [stretchable-height #f]
-	 [paint-callback (lambda (me dc)
-			   (send dc draw-bitmap logo 0 0))]))
+  ; Show the logo
+  (new canvas%
+       [parent intro-panel]
+       [style '(transparent)]
+       [min-width win-width]
+       [min-height 158]
+       [stretchable-width #f]
+       [stretchable-height #f]
+       [paint-callback (lambda (me dc)
+			 (let [(ellipse-width 228)]
+			   (send dc set-brush "white" 'opaque)
+			   (send dc draw-ellipse (my-left ellipse-width) 0 ellipse-width 158)
+			   (send dc draw-bitmap logo (my-left 128) 15)))])
 
   ; Write some instructions
   (new message%
@@ -161,13 +180,6 @@
 	 [parent win]
 	 [alignment '(center bottom)]))
 
-  (new button%
-       [parent tech-panel]
-       [label "Visit http://killersmurf.com for more fun stuff."]
-       [callback
-	 (lambda (me evt)
-	   (send-url "http://killersmurf.com"))])
-
   (new message%
        [parent tech-panel]
        [label "This is an alpha release of solumns."])
@@ -182,7 +194,21 @@
 
   (new message%
        [parent tech-panel]
-       [label "Copyright 2011 John Morrice"])
+       [label "Solumns is Copyright 2011 John Morrice"])
+
+  (new button%
+       [parent tech-panel]
+       [label "Visit killersmurf.com for more fun stuff."]
+       [callback
+	 (lambda (me evt)
+	   (send-url "http://killersmurf.com"))])
+
+  (new button%
+       [parent tech-panel]
+       [label "Solumns logo by Maddy Norval of Magweno.com"]
+       [callback
+	 (lambda (me evt)
+	   (send-url "http://magweno.com/"))])
 
   (new button%
        [parent intro-panel]

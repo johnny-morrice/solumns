@@ -27,7 +27,7 @@
 		       (lambda (candidate)
 			 (and (vector? candidate)
 			      (= (vector-length candidate) 3)
-			      ((vectorof exact-nonnegative-integer?) candidate)
+			      (andmap exact-nonnegative-integer? (vector->list candidate))
 			      (not (and (= (vector-ref candidate 0)
 					   (vector-ref candidate 1))
 					(= (vector-ref candidate 1)
