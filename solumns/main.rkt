@@ -182,6 +182,10 @@
 
   (new message%
        [parent tech-panel]
+       [label "Solumns is Copyright 2011 John Morrice"])
+
+  (new message%
+       [parent tech-panel]
        [label "This is an alpha release of solumns."])
 
   (new message%
@@ -192,13 +196,9 @@
        [parent tech-panel]
        [label "Report bugs to spoon@killersmurf.com"])
 
-  (new message%
-       [parent tech-panel]
-       [label "Solumns is Copyright 2011 John Morrice"])
-
   (new button%
        [parent tech-panel]
-       [label "Visit killersmurf.com for more fun stuff."]
+       [label "Visit Killersmurf.com for more fun stuff"]
        [callback
 	 (lambda (me evt)
 	   (send-url "http://killersmurf.com"))])
