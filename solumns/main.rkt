@@ -6,6 +6,8 @@
 	 "gui/pauser-score-panel.rkt"
 	 "gui/controllers/pauser.rkt"
 	 "gui/pause-status.rkt"
+	 "gui/high-scores.rkt"
+	 "gui/high-score-viewer.rkt"
 	 "grid.rkt"
 	 "colgorithms/rotator.rkt"
 	 "util.rkt"
@@ -220,6 +222,18 @@
 		   (send win delete-child intro-panel)
 		   (send win delete-child tech-panel)
 		   (create-gui))])
+
+  (new button%
+       [parent intro-panel]
+       [label "View High Scores"]
+       [callback
+	 (lambda (me evt)
+	   (let* [(score-win (new frame% [label "Solumns Hall of Fame"]))
+		  (high-score-panel (new high-score-viewer%
+					 [parent score-win]
+					 [scores (top-ten (get-high-scores))]))]
+	     (send high-score-panel display-scores)
+	     (send score-win show #t)))])
 
   (send win show #t))
 

@@ -38,6 +38,7 @@
 			(public display-scores new-hero)
 
 			; Display the scores
+			; Must be called while parent is not shown
 			(define (display-scores)
 			  (log-info (format "scores were ~a\n" scores))
 			  (for [(i (in-range 1 (+ 1 (length scores))))
