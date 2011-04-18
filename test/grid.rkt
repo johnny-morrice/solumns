@@ -1,6 +1,7 @@
 #lang racket
 
 (require "../solumns/grid.rkt"
+	 "../solumns/unsafe/grid.rkt"
 	 rackunit)
 
 (define (with-grid f)
@@ -68,6 +69,20 @@
 			  (check-equal? (send g all-colours)
 					'((#f 1 #f #f #f #f)
 					  (1 #f 2 #f #f 2)))))))
+
+(test-case "Elimination in C"
+	   (with-grid (lambda (g)
+			(let* [(matrix (get-field matrix g))
+			       (prim-matrix (increment-matrix matrix))
+			       (elim (eliminator 5 6))
+			       (success? (elim prim-matrix))]
+			  (when (not success?)
+			    (log-error "ERROR: elimination did not succeed!"))
+			  (check-equal? (length matrix) 5)
+			  (check-equal? (decrement-matrix prim-matrix)
+					'((#f 1 #f #f #f #f)
+					  (1 #f 2 #f #f 2)))))))
+	   
 
 (test-case "Gravity"
 	   (with-grid (lambda (g)

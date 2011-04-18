@@ -184,20 +184,21 @@
 			    [(unsafe-fx= (length (elimination-step)) 0)]
 			    (gravity)))
 
+			(define (count-neighbours x y c)
+			  (if c
+			    (foldr (lambda (ne total)
+				     (if (eq? (vector-ref ne 2) c)
+				       (unsafe-fx+ total 1)
+				       total))
+				   0 (around x y))
+			    0))
+
 			; Tag the squares based on their number of neighbours.
 			; Return a matrix of said squares
 			(define (tag)
-			  (local [(define (count-neighbours x y c)
-				    (if c
-				      (foldr (lambda (ne total)
-					       (if (eq? (vector-ref ne 2) c)
-						 (unsafe-fx+ total 1)
-						 total))
-					     0 (around x y))
-				      0))]
-				 (visit-squares-matrix
-				   (lambda (x y c)
-				     (count-neighbours x y c)))))
+			  (visit-squares-matrix
+			    (lambda (x y c)
+			      (count-neighbours x y c))))
 
 			; Apply a single step of elimination to a grid (that is, removal of congruent elements)
 			; Return number if squares were eliminated, false otherwise.
@@ -215,7 +216,7 @@
 				       (if (and c
 						(ormap (lambda (pos)
 							 (unsafe-fx>= (vector-ref (vector-ref tagged (vector-ref pos 0)) (vector-ref pos 1))
-							     3))
+								      3))
 						       (filter (lambda (pos) (eq? c (vector-ref pos 2)))
 							       (around x y))))
 					 (cons (vector x y c) deleted)

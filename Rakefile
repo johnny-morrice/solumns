@@ -180,7 +180,12 @@ task :wix => [:local_build, :dist] do
 	end
 end
 
-task :build => ["work"] do
+desc "Build the C libray."
+task :build_c => ["work"] do
+	sh "gcc -shared -Wall -fPIC -o work/elimination.so cbits/elimination.c"
+end
+
+task :build => ["work", :build_c] do
 	if windows?
 		sh "windows/build.bat"
 	else
