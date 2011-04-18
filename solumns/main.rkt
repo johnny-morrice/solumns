@@ -229,10 +229,14 @@
        [callback
 	 (lambda (me evt)
 	   (let* [(score-win (new frame% [label "Solumns Hall of Fame"]))
+		  (announce (new message%
+				 [parent score-win]
+				 [label "Champions of Solumns"]))
 		  (high-score-panel (new high-score-viewer%
 					 [parent score-win]
 					 [scores (top-ten (get-high-scores))]))]
 	     (send high-score-panel display-scores)
+	     (send score-win set-icon frame-icon)
 	     (send score-win show #t)))])
 
   (send win show #t))
