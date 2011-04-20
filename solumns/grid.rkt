@@ -17,43 +17,37 @@
 ; You should have received a copy of the GNU General Public License
 ; along with Solumns.  If not, see <http://www.gnu.org/licenses/>.
 
-(require racket/unsafe/ops)
+(require racket/unsafe/ops
+	 "column.rkt"
+	 "coordinate.rkt")
 
 (provide grid%)
 
-; A column is a vector of length 3, containing exact integers.
-(define column?
-  (flat-named-contract 'column
-		       (lambda (candidate)
-			 (and (vector? candidate)
-			      (= (vector-length candidate) 3)
-			      (andmap exact-nonnegative-integer? (vector->list candidate))
-			      (not (and (= (vector-ref candidate 0)
-					   (vector-ref candidate 1))
-					(= (vector-ref candidate 1)
-					   (vector-ref candidate 2))))))))
+(provide/contract
+	 [coloured? (-> exact-nonnegative-integer?
+			boolean?)])
 
-; Produce the next arrangement of a column, like when the player presses up.
-(define (column-shift col)
-  (let [(next (vector 0 0 0))]
-    (vector-set! next 2 (vector-ref col 1))
-    (vector-set! next 1 (vector-ref col 0))
-    (vector-set! next 0 (vector-ref col 2))
-    next))
+; Is this a colour, safely?
+(define (coloured? c)
+  (unsafe-coloured? c))
+
+; Is this a colour?
+(define (unsafe-coloured? c)
+  (unsafe-fx> c 0))
 
 ; A grid of blocks present on the screen.
 (define/contract grid%
 		 (class/c
 		   [gravity (->m void)]
-		   [elimination-step (->m (listof (vectorof exact-nonnegative-integer?)))]
+		   [elimination-step (->m (listof coordinate/c))]
 		   [visit-squares (->m (-> exact-nonnegative-integer?
 					   exact-nonnegative-integer?
-					   (or/c exact-nonnegative-integer? #f)
+					   exact-nonnegative-integer?
 					   any)
 				       (listof (listof any/c)))]
 		   [visit-squares-matrix (->m (-> exact-nonnegative-integer?
 						  exact-nonnegative-integer?
-						  (or/c exact-nonnegative-integer? #f)
+						  exact-nonnegative-integer?
 						  any)
 					      (vectorof (vectorof any/c)))]
 
@@ -73,7 +67,7 @@
 				    void)]
 		   [matrix-ref (->m exact-nonnegative-integer?
 				    exact-nonnegative-integer?
-				    (or/c #f exact-nonnegative-integer?))]
+				    exact-nonnegative-integer?)]
 		   [greq? (->m (is-a?/c grid%)
 				boolean?)])
 
@@ -84,7 +78,7 @@
 			(field [matrix
 				 (build-vector width
 					       (lambda (i) (build-vector height
-									 (lambda (j) #f))))])
+									 (lambda (j) 0))))])
 
 			; Mostly we expose so much so that the testing module can get at them
 			; better to do this with module hiding
@@ -105,7 +99,7 @@
 			(define (column-height x)
 			  (let* [(slice (vector-ref matrix x))
 				 (places (vector->list slice))
-				 (colours-end (member #f places))]
+				 (colours-end (member 0 places))]
 			    (if colours-end
 			      (- (length places) (length colours-end))
 			      (length places))))
@@ -117,7 +111,7 @@
 			; Assuming the grid is sane, can a new column sit in this position?
 			(define (can-occupy? x y)
 			  (and (in-matrix? x y)
-			       (not (matrix-ref x y))))
+			       (unsafe-fx= 0 (matrix-ref x y))))
 
 			; Drop a column until it hits the block or floor above this position
 			(define (drop-until x y col)
@@ -158,12 +152,13 @@
 			; Apply gravity to a grid.
 			(define (gravity)
 			  (set! matrix
-			    (list->vector
-			      (for/list [(col matrix)]
-					(let [(dropped (vector-filter (lambda (x) x)
-								      col))]
-					  (vector-append dropped
-							 (make-vector (- height (vector-length dropped)) #f)))))))
+			    (vector-map
+			      (lambda (col)
+				(let [(dropped (vector-filter (lambda (x) (unsafe-coloured? x))
+							      col))]
+				  (vector-append dropped
+						 (make-vector (- height (vector-length dropped)) 0))))
+			      matrix)))
 
 			; Get an element in the matrix
 			(define (matrix-ref x y)
@@ -185,7 +180,7 @@
 			    (gravity)))
 
 			(define (count-neighbours x y c)
-			  (if c
+			  (if (unsafe-coloured? c)
 			    (foldr (lambda (ne total)
 				     (if (eq? (vector-ref ne 2) c)
 				       (unsafe-fx+ total 1)
@@ -213,18 +208,17 @@
 				     [(x (in-range 0 width))
 				      (y (in-range 0 height))]
 				     (let [(c (matrix-ref x y))]
-				       (if (and c
+				       (if (and (unsafe-coloured? c)
 						(ormap (lambda (pos)
 							 (unsafe-fx>= (vector-ref (vector-ref tagged (vector-ref pos 0)) (vector-ref pos 1))
 								      3))
 						       (filter (lambda (pos) (eq? c (vector-ref pos 2)))
 							       (around x y))))
 					 (cons (vector x y c) deleted)
-					 deleted))))
-				 (removed (length removing))]
+					 deleted))))]
 			    (for-each
 			      (lambda (pos)
-				(matrix-set! (vector-ref pos 0) (vector-ref pos 1) #f))
+				(matrix-set! (vector-ref pos 0) (vector-ref pos 1) 0))
 			      removing)
 			    removing))
 
@@ -245,9 +239,3 @@
 				    (for/list [(square col)
 					       (j (in-range 0 (vector-length col)))]
 					      (visitor i j square))))))
-
-(provide/contract
-  [column? (-> any/c
-	       boolean?)]
-  [column-shift (-> column?
-		    column?)])

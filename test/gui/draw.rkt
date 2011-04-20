@@ -10,12 +10,12 @@
 (define gr
   (new grid% [width 3] [height 6]))
 
-(send gr matrix-set! 0 0 0)
-(send gr matrix-set! 0 1 1)
-(send gr matrix-set! 0 2 2)
-(send gr matrix-set! 1 0 3)
-(send gr matrix-set! 1 1 4)
-(send gr matrix-set! 2 0 5)
+(send gr matrix-set! 0 0 1)
+(send gr matrix-set! 0 1 2)
+(send gr matrix-set! 0 2 3)
+(send gr matrix-set! 1 0 4)
+(send gr matrix-set! 1 1 5)
+(send gr matrix-set! 2 0 6)
 
 ; Create a window
 (define win
@@ -31,7 +31,7 @@
        [parent win]
        [grid gr]))
 
-(send canvas falling (dropper 2 3 '#(6 7 8)))
+(send canvas falling (dropper 2 3 '#(7 8 9)))
 (send win show #t) 
 
 (thread (lambda ()

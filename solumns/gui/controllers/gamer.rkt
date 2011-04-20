@@ -20,6 +20,7 @@
 (require "../controller.rkt"
 	 "../../colgorithm.rkt"
 	 "../../grid.rkt"
+	 "../../column.rkt"
 	 "../../util.rkt"
 	 "dropper.rkt")
 

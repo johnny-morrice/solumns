@@ -66,7 +66,7 @@
 			(define (draw-grid [gr grid])
 			  (send gr visit-squares
 				(lambda (x y c)
-				  (when c
+				  (when (coloured? c)
 				    (draw-square x y c)))))
 
 			; Draw a square, adjusting for relative sizes

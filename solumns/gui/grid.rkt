@@ -25,6 +25,7 @@
 
 (require "grid-canvas.rkt"
 	 "next-column.rkt"
+	 "../column.rkt"
 	 "../grid.rkt"
 	 "../util.rkt")
 

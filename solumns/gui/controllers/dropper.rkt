@@ -19,7 +19,7 @@
 
 (require "../controller.rkt"
 	 "updater.rkt"
-	 "../../grid.rkt")
+	 "../../column.rkt")
 
 (provide dropper-controller%)
 
@@ -86,8 +86,8 @@
 
 			; Perform a step of the game loop
 			(define (step)
+			  (super step)
 			  (when falling
 			    (when (gravity)
-			      (landed)))
-			  (super step))))
+			      (landed))))))
 

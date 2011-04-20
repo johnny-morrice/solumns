@@ -45,7 +45,7 @@
 			(field [colours (foldl (lambda (col set)
 						 (set-add set col))
 					       (set)
-					       (for/list [(col (in-range 0 num-colours))]
+					       (for/list [(col (in-range 1 (add1 num-colours)))]
 							 col))])
 
 			; Generate a new column

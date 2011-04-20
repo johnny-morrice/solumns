@@ -47,15 +47,15 @@
 
 ; A hash of colour numbers as used by colgorithms to colors
 (define colour-table
-  (hash 0 red
-	1 yellow
-	2 green
-	3 blue
-	4 linen
-	5 purple
-	6 grey
-	7 brown
-	8 skin))
+  (hash 1 red
+	2 yellow
+	3 green
+	4 blue
+	5 linen
+	6 purple
+	7 grey
+	8 brown
+	9 skin))
 
 
 ; Map integers or #f to colours, recognised by gracket
@@ -66,8 +66,8 @@
   [colour-table hash?]
   [to-colour (-> (and/c exact-nonnegative-integer?
 			(lambda (n)
-			  (< n (length (for/list
-					 [(p (in-hash-keys colour-table))]
-					 #f)))))
+			  (<= n (length (for/list
+					  [(p (in-hash-keys colour-table))]
+					  #f)))))
 		 (listof (and/c real? (not/c negative?))))])
 

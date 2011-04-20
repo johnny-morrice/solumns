@@ -25,4 +25,10 @@
 // Therefore, before passing any colours to this file, they should be incremented by 1,
 // and #f should be converted to 0.  This file will return or write colours back in that same format.
 
-
+// Perform the elimination step
+// Update the second array
+// with a 1 in each cell that was deleted, a 0 otherwise.
+void
+elimination_step(short width, short height, char ** grid, char ** record)
+{
+}

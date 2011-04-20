@@ -66,6 +66,6 @@
 	   (let [(clrs (flatten (map vector->list columns)))]
 	     (check-true (list-all?
 			      (lambda (clr)
-				     (or (= 0 clr)
-					 (= 1 clr)
-					 (= 2 clr))) clrs))))
+				     (or (= 1 clr)
+					 (= 2 clr)
+					 (= 3 clr))) clrs))))

@@ -17,25 +17,8 @@
 ; You should have received a copy of the GNU General Public License
 ; along with Solumns.  If not, see <http://www.gnu.org/licenses/>.
 
-(require "grid.rkt"
-	 "column.rkt")
+(provide coordinate/c)
 
-(provide colgorithm-class/c
-	 colgorithm/c)
-
-; Macro that returns code for a contract on colgorithms
-(define-syntax-rule (nexter contract-type)
-		    (contract-type [next (->m (is-a?/c grid%) 
-			           column?)]))
-
-; Colgorithms are objects which provide an algorithm
-; for determining the next column, given a grid%.
-; This contract recognises a class
-(define colgorithm-class/c
-  (nexter class/c))
-
-; This contract recognises an object of the class colgorithm/c
-(define colgorithm/c
-  (nexter object/c))
-
-
+; A coordinate on a grid
+(define coordinate/c
+  (vectorof exact-nonnegative-integer?))

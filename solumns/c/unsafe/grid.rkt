@@ -16,26 +16,22 @@
 ;
 ; You should have received a copy of the GNU General Public License
 ; along with Solumns.  If not, see <http://www.gnu.org/licenses/>.
+;
+(require ffi/unsafe)
 
-(require "grid.rkt"
-	 "column.rkt")
+(provide unsafe-eliminator)
 
-(provide colgorithm-class/c
-	 colgorithm/c)
+; The shared object providing the elimination-step function
+(define eliminator-lib
+  (ffi-lib "work/elimination"))
 
-; Macro that returns code for a contract on colgorithms
-(define-syntax-rule (nexter contract-type)
-		    (contract-type [next (->m (is-a?/c grid%) 
-			           column?)]))
-
-; Colgorithms are objects which provide an algorithm
-; for determining the next column, given a grid%.
-; This contract recognises a class
-(define colgorithm-class/c
-  (nexter class/c))
-
-; This contract recognises an object of the class colgorithm/c
-(define colgorithm/c
-  (nexter object/c))
-
-
+; The elimination-step function
+(define (unsafe-eliminator width height)
+  (get-ffi-obj "elimination_step"
+	       eliminator-lib
+	       (_fun _int8
+		     _int8
+		     (_vector io (_vector io _int8 height) width)
+		     (_vector io (_vector io _int8 height) width)
+		     ->
+		     _void)))

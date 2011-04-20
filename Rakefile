@@ -106,7 +106,7 @@ task :test_input do
 end
 
 desc "Test gravity, neighbouring column elimination." 
-task :test_grid do
+task :test_grid => [:build_c] do
 	racket "test/grid.rkt"
 end
 
@@ -182,7 +182,7 @@ end
 
 desc "Build the C libray."
 task :build_c => ["work"] do
-	sh "gcc -shared -Wall -fPIC -o work/elimination.so cbits/elimination.c"
+	sh "gcc -std=c99 -shared -Wall -fPIC -o work/elimination.so cbits/elimination.c"
 end
 
 task :build => ["work", :build_c] do

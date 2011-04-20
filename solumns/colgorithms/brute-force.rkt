@@ -17,7 +17,7 @@
 ; You should have received a copy of the GNU General Public License
 ; along with Solumns.  If not, see <http://www.gnu.org/licenses/>.
 
-(require "../grid.rkt"
+(require "../column.rkt"
 	 "../colgorithm.rkt"
 	 "random.rkt"
 	 racket/unsafe/ops)
@@ -116,9 +116,9 @@
 ; Create possible columns, with each colour different, with n colours
 (define (permute-singles n)
   (if (> n 2)
-    (let [(ending (vector (- n 3) (- n 2) (- n 1)))]
+    (let [(ending (vector (- n 2) (- n 1) n))]
       ; Here we make columns which have no elements the same
-      (let singles [(vs (list '#(0 1 2) '#(0 2 1)))]
+      (let singles [(vs (list '#(1 2 3) '#(1 3 2)))]
 	(let [(u (car vs))]
 	  (if (not (equal? u ending))
 	    (let* [(v (next-single n u))
@@ -129,8 +129,8 @@
 
 ; Create possible columns, with 2 colours the same, with n colours
 (define (permute-doubles n)
-  (let [(ending (vector (- n 1) (- n 2) (- n 2)))]
-    (let doubles [(vs (list '#(0 1 1)))]
+  (let [(ending (vector n (- n 1) (- n 1)))]
+    (let doubles [(vs (list '#(1 2 2)))]
       (let [(u (car vs))]
 	(if (not (equal? u ending))
 	  (doubles (cons (next-double n (car vs)) vs))
@@ -152,13 +152,13 @@
 ; Given n colours, is the colour at the ith position in the column the max colour?
 (define (max-colour? n i v)
   (= (vector-ref v i)
-     (- n 1)))
+     n))
 
 ; Produce a new column and pass it to a function along with functions to manipulate that column
 (define (with-column-ops n v f)
   (local
     [(define cand
-       (vector 0 0 0))
+       (vector 1 1 1))
      (define (copy i)
        (vector-set! cand i
 		    (vector-ref v i)))

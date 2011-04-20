@@ -17,12 +17,12 @@
 	    (new grid% [width 2] [height 5]))
 	  (define double
 	    (new grid% [width 3] [height 3]))]
-	 (send single matrix-set! 0 0 0)
-	 (send single matrix-set! 0 1 0)
-	 (send single matrix-set! 1 0 1)
-	 (send single matrix-set! 1 1 1)
-	 (send double add-column 0 0 '#(0 1 2))
-	 (send double add-column 1 0 '#(0 1 2))
+	 (send single matrix-set! 0 0 1)
+	 (send single matrix-set! 0 1 1)
+	 (send single matrix-set! 1 0 2)
+	 (send single matrix-set! 1 1 2)
+	 (send double add-column 0 0 '#(1 2 3))
+	 (send double add-column 1 0 '#(1 2 3))
 	 ; Check if simple minimisation works
 	 (local [(define single-col
 		   (send cg next single))

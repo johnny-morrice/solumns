@@ -1,0 +1,2 @@
+Although this directory is called c, it doesn't actually contain any C.
+Rather it binds to the shared library written in C.
