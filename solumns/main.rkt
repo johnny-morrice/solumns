@@ -25,7 +25,7 @@
 	 "gui/pause-status.rkt"
 	 "gui/high-scores.rkt"
 	 "gui/high-score-viewer.rkt"
-	 "grid.rkt"
+	 "cgrid.rkt"
 	 "colgorithms/rotator.rkt"
 	 "util.rkt"
 	 "logo-dir.rkt"
@@ -75,7 +75,7 @@
 	 [stretchable-height #f]))
 
   (define gr
-    (new grid%
+    (new cgrid%
 	 [width 6]
 	 [height 15]))
 
