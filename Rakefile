@@ -20,6 +20,11 @@ def windows?
 	RUBY_PLATFORM =~ /(win|w)32$/
 end
 
+# location of solumns binary after build
+def solumns_bin
+	"work/bin/solumns"
+end
+
 desc "Test a game where the columns are shuffled."
 task :test_shuffle do
 	gracket "test/gui/shuffler.rkt"
@@ -141,12 +146,15 @@ task :test => [:test_grid, :test_random,
 	:test_shuffling, :test_cycle, :test_pause_status]
 
 desc "Run solumns"
-task :run => [:local_logo] do
-	gracket "solumns/main.rkt"
+task :run => [:build] do
+	sh solumns_bin 
 end
 
 file "work" do
 	mkdir "work"
+	mkdir "work/bin"
+	mkdir "work/lib"
+
 end
 
 file "release" do
@@ -158,7 +166,7 @@ task :dist => ["release"] do
 	if windows?
 		sh "windows/release.bat"
 	else
-		sh "raco distribute release work/solumns"
+		sh "raco distribute release #{solumns_bin}"
 	end
 	FileUtils.cp_r "data", "release/"
 end
@@ -182,14 +190,14 @@ end
 
 desc "Build the C libray."
 task :build_c => ["work"] do
-	sh "gcc -std=c99 -shared -Wall -fPIC -o work/elimination.so cbits/elimination.c"
+	sh "gcc -std=c99 -shared -Wall -fPIC -o work/lib/elimination.so cbits/elimination.c"
 end
 
 task :build => ["work", :build_c] do
 	if windows?
 		sh "windows/build.bat"
 	else
-		sh "raco exe --gui -o work/solumns solumns/main.rkt"
+		sh "raco exe --gui -o #{solumns_bin} solumns/main.rkt"
 	end
 end
 
