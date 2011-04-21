@@ -23,9 +23,10 @@
 
 (define eliminator-path
   (let [(local-lib "lib/elimination")]
-    (if (file-exists? (string-append local-lib ".so"))
+    (if (or (file-exists? (string-append local-lib ".so"))
+	    (file-exists? (string-append local-lib ".dll")))
       local-lib
-      (build-path (find-system-path 'run-file) "../lib/elimination"))))
+      (build-path (find-system-path 'run-file) ".." "lib/elimination"))))
 
 ; The shared object providing the elimination-step function
 (define eliminator-lib

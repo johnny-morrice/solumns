@@ -22,7 +22,7 @@ end
 
 # location of solumns binary after build
 def solumns_bin
-	"work/bin/solumns"
+	"work/solumns"
 end
 
 desc "Test a game where the columns are shuffled."
@@ -147,12 +147,11 @@ task :test => [:test_grid, :test_random,
 
 desc "Run solumns"
 task :run => [:build] do
-	sh solumns_bin 
+	run solumns_bin 
 end
 
 file "work" do
 	mkdir "work"
-	mkdir "work/bin"
 
 end
 
@@ -174,6 +173,8 @@ desc "Clean"
 task :clean do
 	FileUtils.rm_rf "work"
 	FileUtils.rm_rf "release"
+	FileUtils.rm_rf "lib"
+	FileUtils.rm_rf "profile/lib"
 end
 
 desc "Create windows installer"
@@ -187,11 +188,18 @@ task :wix => [:build, :dist] do
 	end
 end
 
+file "lib" do
+	FileUtils.mkdir "lib"
+end
+
 desc "Build the C libray."
-task :build_c => ["work"] do
-	FileUtils.rm_f "profile/lib/elimination.so"
-	sh "gcc -std=c99 -shared -Wall -fPIC -o lib/elimination.so cbits/elimination.c"
-	FileUtils.cp "lib/elimination.so", "profile/lib/elimination.so"
+task :build_c => ["work", "lib"] do
+	if windows?
+		sh "windows/build_c.bat"
+	else
+		sh "gcc -std=c99 -shared -Wall -fPIC -o lib/elimination.so cbits/elimination.c"
+	end
+
 end
 
 task :build => ["work", :build_c] do
