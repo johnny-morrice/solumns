@@ -152,7 +152,7 @@
        [paint-callback (lambda (me dc)
 			 (let [(ellipse-width 228)]
 			   (send dc set-brush "white" 'opaque)
-			   (send dc draw-ellipse (my-left ellipse-width) 0 ellipse-width 158)
+			   (send dc draw-ellipse (my-left ellipse-width) 0 ellipse-width 156)
 			   (send dc draw-bitmap logo (my-left 128) 15)))])
 
   ; Write some instructions

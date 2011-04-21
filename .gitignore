@@ -1,5 +1,7 @@
 *.swp
 *~
+*.obj
+*.dll
 *.so
 *.zo
 *.dep
