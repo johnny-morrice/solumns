@@ -80,10 +80,10 @@
 			    (lambda (new-matrix eliminated)
 			      (when (not eliminated)
 				(log-error "ERROR: elimination did not succeed!"))
-			      (check-equal? (length eliminated) 5)
 			      (check-equal? new-matrix
-					    '((0 2 0 0 0 0)
-					      (2 0 3 0 0 3)))))))))
+					    (vector (vector 0 2 0 0 0 0)
+					      (vector 2 0 3 0 0 3)))
+			      (check-equal? (length eliminated) 5)))))))
 
 
 (test-case "Gravity"

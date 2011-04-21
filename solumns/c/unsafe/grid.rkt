@@ -35,10 +35,10 @@
 (define (unsafe-eliminator width height)
   (get-ffi-obj "elimination_step"
 	       eliminator-lib
-	       (_fun _int8
-		     _int8
-		     (r : (_vector io (_vector io _int8 height) width))
-		     (g : (_vector io (_vector io _int8 height) width))
+	       (_fun _uint8
+		     _uint8
+		     (r : (_vector io (_vector io _uint8 height) width))
+		     (g : (_vector io (_vector io _uint8 height) width))
 		     ->
 		     _void
 		     ->
