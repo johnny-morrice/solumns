@@ -33,7 +33,8 @@
 
 	 (define (elimination-step)
 	   (call-with-values
-	     elim
+	     (lambda ()
+	       (elim (get-field matrix this)))
 	     (lambda (new-matrix deleted)
 	       (set-field! matrix this new-matrix)
 	       deleted)))))

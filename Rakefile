@@ -189,7 +189,9 @@ end
 
 desc "Build the C libray."
 task :build_c => ["work"] do
+	FileUtils.rm_f "profile/lib/elimination.so"
 	sh "gcc -std=c99 -shared -Wall -fPIC -o lib/elimination.so cbits/elimination.c"
+	FileUtils.cp "lib/elimination.so", "profile/lib/elimination.so"
 end
 
 task :build => ["work", :build_c] do

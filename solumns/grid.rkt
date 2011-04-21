@@ -119,7 +119,7 @@
 
 			; Clone this grid.
 			(define (clone)
-			  (let [(gen (new grid%
+			  (let [(gen (new this%
 					  [width width]
 					  [height height]))]
 			    (visit-squares
@@ -176,7 +176,7 @@
 			; Perform elimination and gravity steps until there is no change!
 			(define (reduce)
 			  (do []
-			    [(unsafe-fx= (length (elimination-step)) 0)]
+			    [(unsafe-fx= (length (send this elimination-step)) 0)]
 			    (gravity)))
 
 			(define (count-neighbours x y c)
