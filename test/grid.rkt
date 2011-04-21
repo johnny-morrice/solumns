@@ -73,15 +73,18 @@
 (test-case "Elimination in C"
 	   (with-grid (lambda (g)
 			(let* [(matrix (get-field matrix g))
-			       (elim (eliminator (vector-length matrix) (vector-length (vector-ref matrix 0))))
-			       (eliminated (elim matrix))]
-			  (when (not eliminated)
-			    (log-error "ERROR: elimination did not succeed!"))
-			  (check-equal? (length eliminated) 5)
-			  (check-equal? matrix
-					'((0 2 0 0 0 0)
-					  (2 0 3 0 0 3)))))))
-	   
+			       (elim (eliminator (vector-length matrix) (vector-length (vector-ref matrix 0))))]
+			  (call-with-values
+			    (lambda ()
+			      (elim matrix))
+			    (lambda (new-matrix eliminated)
+			      (when (not eliminated)
+				(log-error "ERROR: elimination did not succeed!"))
+			      (check-equal? (length eliminated) 5)
+			      (check-equal? new-matrix
+					    '((0 2 0 0 0 0)
+					      (2 0 3 0 0 3)))))))))
+
 
 (test-case "Gravity"
 	   (with-grid (lambda (g)

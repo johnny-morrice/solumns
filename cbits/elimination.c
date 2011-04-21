@@ -27,11 +27,8 @@
 
 // Perform the elimination step
 // Update the second array
-// with a 1 in each cell that was deleted, a 0 otherwise.
-// Return the given pointers
-// In a new malloced pointer
+// with a the colour of each cell that was deleted.
 void
 elimination_step(short width, short height, char ** grid, char ** record)
 {
-	record[0][1] = 100;
 }

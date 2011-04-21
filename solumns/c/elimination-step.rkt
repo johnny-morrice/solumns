@@ -36,7 +36,7 @@
 	(call-with-values
 	  (lambda ()
 	    (celim width height matrix blank))
-	  (lambda (forget cleaned record)
+	  (lambda (cleaned record)
 	    (let [(deleted (flatten
 			     (for/list [(i (in-naturals))
 					(bcol (in-vector record))]
@@ -49,7 +49,3 @@
 						 deleted)
 					   deleted)))))]
 	      (values cleaned deleted))))))))
-
-
-
-
