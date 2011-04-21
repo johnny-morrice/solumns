@@ -1,5 +1,6 @@
 *.swp
 *~
+*.so
 *.zo
 *.dep
 *.exe

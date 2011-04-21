@@ -23,28 +23,32 @@
 (provide/contract
   [eliminator (-> byte? byte?
 		  (-> (vectorof (vectorof exact-nonnegative-integer?))
-		      (listof coordinate/c)))])
+		      (values (vectorof (vectorof exact-nonnegative-integer?))
+			      (listof coordinate/c))))])
 
 ; The elimination-step function
 (define (eliminator width height)
   (let [(celim (unsafe-eliminator width height))]
     (lambda (matrix)
-      (let [(blank (build-vector width
-				 (lambda (n)
-				   (make-vector height 0))))]
-	(celim width height matrix blank)
-	(flatten
-	  (for/list [(i (in-naturals))
-		     (bcol (in-vector blank))]
-		    (for/fold 
-		      [(deleted '())]
-		      [(j (in-naturals))
-		       (col (in-vector bcol))]
-		      (if (> col 0)
-			(cons (vector i j col
-				      deleted)
-			      deleted)
-			deleted))))))))
+      (let* [(blank (build-vector width
+				  (lambda (n)
+				    (make-vector height 0))))]
+	(call-with-values
+	  (lambda ()
+	    (celim width height matrix blank))
+	  (lambda (forget cleaned record)
+	    (let [(deleted (flatten
+			     (for/list [(i (in-naturals))
+					(bcol (in-vector record))]
+				       (for/fold
+					 [(deleted '())]
+					 [(j (in-naturals))
+					  (col (in-vector bcol))]
+					 (if (> col 0)
+					   (cons (vector i j col)
+						 deleted)
+					   deleted)))))]
+	      (values cleaned deleted))))))))
 
 
 

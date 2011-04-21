@@ -1,4 +1,4 @@
-#lang racket
+#lang racket 
 
 ; Copyright 2011 John Morrice
 ;
@@ -21,9 +21,15 @@
 
 (provide unsafe-eliminator)
 
+(define eliminator-path
+  (let [(local-lib "lib/elimination")]
+    (if (file-exists? (string-append local-lib ".so"))
+      local-lib
+      (build-path (find-system-path 'run-file) "elimination"))))
+
 ; The shared object providing the elimination-step function
 (define eliminator-lib
-  (ffi-lib "work/elimination"))
+  (ffi-lib eliminator-path))
 
 ; The elimination-step function
 (define (unsafe-eliminator width height)
@@ -31,7 +37,9 @@
 	       eliminator-lib
 	       (_fun _int8
 		     _int8
-		     (_vector io (_vector io _int8 height) width)
-		     (_vector io (_vector io _int8 height) width)
+		     (r : (_vector io (_vector io _int8 height) width))
+		     (g : (_vector io (_vector io _int8 height) width))
 		     ->
-		     _void)))
+		     _void
+		     ->
+		     (values void r g))))

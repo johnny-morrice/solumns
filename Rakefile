@@ -153,7 +153,6 @@ end
 file "work" do
 	mkdir "work"
 	mkdir "work/bin"
-	mkdir "work/lib"
 
 end
 
@@ -190,7 +189,7 @@ end
 
 desc "Build the C libray."
 task :build_c => ["work"] do
-	sh "gcc -std=c99 -shared -Wall -fPIC -o work/lib/elimination.so cbits/elimination.c"
+	sh "gcc -std=c99 -shared -Wall -fPIC -o lib/elimination.so cbits/elimination.c"
 end
 
 task :build => ["work", :build_c] do
