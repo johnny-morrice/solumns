@@ -170,7 +170,7 @@ task :clean do
 end
 
 desc "Create windows installer"
-task :wix => [:local_build, :dist] do
+task :wix => [:build, :dist] do
 	if windows?
 		FileUtils.cp "windows/installer/solumns.wxs", "release"
 		FileUtils.cp "windows/installer/COPYING.rtf", "release"
@@ -193,20 +193,6 @@ task :build => ["work", :build_c] do
 	end
 end
 
-task :local_logo do
-	FileUtils.cp "hack/local-logo.rkt", "hack/logo-dir.rkt"
-end
-
-task :unix_logo do
-	FileUtils.cp "hack/unix-logo.rkt", "hack/logo-dir.rkt"
-end
-
-desc "Compile with a local logo"
-task :local_build => [:local_logo, :build]
-
-desc "Compile with a unix logo"
-task :unix_build => [:unix_logo, :build]
-
 def udeb_usage_message
 	"rake dh_make VERSION=x.y-z"
 end
@@ -216,7 +202,7 @@ def udeb_usage_error
 end
 
 desc "Build ubuntu .deb package.  #{udeb_usage_message}"
-task :udeb => [:clean, :unix_build, :dist] do
+task :udeb => [:clean, :build, :dist] do
 	ver = ENV["VERSION"]
 	if ver
 		if ver =~ /^(\d+)\.(\d+)-(\d+)$/
