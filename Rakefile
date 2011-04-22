@@ -277,7 +277,7 @@ end
 
 desc "CRASH - current bug"
 task :crash do
-	racket "profile/crash.rkt"
+	sh "racket profile/crash.rkt"
 end
 
 desc "Wordcount"

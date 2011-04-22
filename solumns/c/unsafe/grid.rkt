@@ -19,7 +19,11 @@
 ;
 (require ffi/unsafe)
 
-(provide unsafe-eliminator)
+(provide unsafe-eliminate
+	 unsafe-new-matrix
+	 unsafe-free-matrix
+	 unsafe-read-matrix
+	 unsafe-write-matrix)
 
 (define eliminator-path
   (let [(local-lib "lib/elimination")]
@@ -33,14 +37,44 @@
   (ffi-lib eliminator-path))
 
 ; The elimination-step function
-(define (unsafe-eliminator width height)
+(define unsafe-eliminate
   (get-ffi-obj "elimination_step"
 	       eliminator-lib
 	       (_fun _uint8
 		     _uint8
-		     (r : (_vector io (_vector io _uint8 height) width))
-		     (g : (_vector io (_vector io _uint8 height) width))
-		     ->
-		     _void
-		     ->
-		     (values r g))))
+		     -> _pointer)))
+
+; Free a cmatrix, given its width
+(define unsafe-free-matrix
+  (get-ffi-obj "free_matrix"
+	       eliminator-lib
+	       (_fun _uint8
+		     -> _void)))
+
+; Create a new matrix given width and height
+(define unsafe-new-matrix
+  (get-ffi-obj "new_matrix"
+	       eliminator-lib
+	       (_fun _uint8
+		     _uint8
+		     -> _pointer)))
+
+; Write to the matrix
+(define unsafe-write-matrix
+  (get-ffi-obj "write_matrix"
+	       eliminator-lib
+	       (fun _uint8
+		    _uint8
+		    _uint8
+		    _pointer
+		    -> _void)))
+
+; Read from the matrix
+(define unsafe-read-matrix
+  (get-ffi-obj "read_matrix"
+	       eliminator-lib
+	       (fun _uint8
+		    _uint8
+		    _pointer
+		    -> _uint8)))
+

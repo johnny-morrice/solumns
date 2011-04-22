@@ -1,24 +1,30 @@
 #lang racket
 
 (require "../solumns/cgrid.rkt"
+	 "../solumns/colgorithms/random.rkt"
 	 "../solumns/colgorithms/brute-force.rkt")
 
+(define clrs
+  3)
+
 (define brute
-  (new brute-force% [colours 9]))
+  (new brute-force% [colours clrs]))
 
 (define gr
-  (new cgrid% [width 7] [height 9]))
+  (new cgrid% [width 4] [height 9]))
 
-(send gr add-column 0 0 '#(0 1 2))
-(send gr add-column 1 0 '#(3 4 5))
-(send gr add-column 1 3 '#(5 4 1))
-(send gr add-column 2 0 '#(5 6 0))
-(send gr add-column 3 0 '#(0 1 2))
-(send gr add-column 3 3 '#(3 4 5))
-(send gr add-column 4 3 '#(5 4 1))
-(send gr add-column 5 0 '#(0 1 2))
-(send gr add-column 5 3 '#(3 4 5))
-(send gr add-column 6 3 '#(5 4 1))
+(define rand
+  (make-rand clrs))
+
+(define (racol)
+  (send rand next gr))
+
+(send gr add-column 0 0 (racol))
+(send gr add-column 1 0 (racol))
+(send gr add-column 1 3 (racol))
+(send gr add-column 2 0 (racol))
+(send gr add-column 3 0 (racol))
+(send gr add-column 3 3 (racol))
 
 (define start
   (current-milliseconds))
@@ -26,6 +32,6 @@
 (define (crash)
   (for [(i (in-naturals))]
        (printf "Bruteforcing... ~ams\n" (- (current-milliseconds) start))
-       (printf "Generated: ~a\n" (send brute next gr))))
+       (printf "Generated: ~a\n\n" (send brute next gr))))
 
 (crash)

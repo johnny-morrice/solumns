@@ -133,39 +133,118 @@ tag_cell(const unsigned char colour,
 
 }
 
+// Free a matrix
+void
+free_matrix(unsigned char width, unsigned char ** matrix)
+{
+	// Iterative variable
+	unsigned char i;
+
+	// Free the matrix 
+	for (i = 0; i < width; i++)
+	{
+		free(matrix[i]);
+	}
+
+	free(matrix);
+}
+
+// DIE DIE DIE
+void
+fatal_out_of_memory()
+{
+	fprintf(stderr, "elimination_step: could not assign memory for tag row\n");
+	exit(EXIT_FAILURE);
+}
+
+// Read from matrix (outdoor use only)
+#if defined (__WINDOWS__)
+__declspec(dllexport)
+#endif
+void
+read_matrix(const unsigned char x,
+		const unsigned char y,
+		unsigned char ** const matrix)
+{
+	matrix[x][y];
+}
+
+// Write to matrix (outdoor use only)
+#if defined (__WINDOWS__)
+__declspec(dllexport)
+#endif
+void
+write_matrix(const unsigned char x,
+		const unsigned char y,
+		const unsigned char val,
+		unsigned char ** const matrix)
+{
+	matrix[x][y] = val;
+}
+
+
+// Create a new matrix
+#if defined (__WINDOWS__)
+__declspec(dllexport)
+#endif
+unsigned char **
+new_matrix(const unsigned char width,
+		const unsigned char height)
+{
+
+	// Iterative variable
+	unsigned char i;
+
+	// The new matrix
+	unsigned char ** const matrix = malloc(sizeof(char *) * width);
+	if (!matrix)
+	{
+		fatal_out_of_memory();
+
+	}
+	for (i = 0; i < width; i ++)
+	{
+		matrix[i] = malloc(sizeof(char) * height);
+		if (!matrix[i])
+		{
+			fatal_out_of_memory();
+		}
+	}
+
+	return matrix;
+}
+
+
+
 // Perform the elimination step
 // Update the second array
 // with a the colour of each cell that was deleted.
 #if defined (__WINDOWS__)
 __declspec(dllexport)
 #endif
-void
+unsigned char **
 elimination_step(const unsigned char width,
 		const unsigned char height,
-		unsigned char ** const grid,
-		unsigned char ** const record)
+		unsigned char ** const grid)
 {
 	// Iterative variables for traversing the grid
 	unsigned char i, j;
 	// The colour of the current cell
 	unsigned char cell;
 	// Tagging matrix
-	unsigned char ** const tag = malloc(sizeof(char *) * width);
-	if (!tag)
-	{
-		fprintf(stderr, "elimination_step: could not assign memory for tag\n");
-		exit(EXIT_FAILURE);
+	unsigned char ** const tag = new_matrix(width, height);
+	// Record
+	unsigned char ** const record = new_matrix(width, height);
 
-	}
-	for (i = 0; i < width; i ++)
+	// All zeros in the record
+	for (i = 0; i < width; i++)
 	{
-		tag[i] = malloc(sizeof(char) * height);
-		if (!tag[i])
+		for (j = 0; j < height; j++)
 		{
-			fprintf(stderr, "elimination_step: could not assign memory for tag row\n");
-			exit(EXIT_FAILURE);
+			record[i][j] = 0;
 		}
 	}
+       
 
 	// Iterate over the whole grid, rows first
 	for (i = 0; i < width; i++)
@@ -222,12 +301,7 @@ elimination_step(const unsigned char width,
 		}
 	}
 
-	// Free the tag
-	for (i = 0; i < width; i++)
-	{
-		free(tag[i]);
-	}
-
-	free(tag);
-
+	free_matrix(width, tag);
+	
+	return record;
 }

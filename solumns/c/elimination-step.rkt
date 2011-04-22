@@ -18,7 +18,8 @@
 ; along with Solumns.  If not, see <http://www.gnu.org/licenses/>.
 
 (require "unsafe/grid.rkt"
-	 "../coordinate.rkt")
+	 "../coordinate.rkt"
+	 racket/unsafe)
 
 (provide/contract
   [eliminator (-> byte? byte?
@@ -27,27 +28,31 @@
 			      (listof coordinate/c))))])
 
 ; The elimination-step function
-(define (eliminator width height)
-  (let [(celim (unsafe-eliminator width height))]
-    (lambda (matrix)
-      (let* [(blank (build-vector width
-				  (lambda (n)
-				    (make-vector height 0))))]
-	(call-with-values
-	  (lambda ()
-	    (celim width height matrix blank))
-	  (lambda (cleaned record)
-	    (log-debug (format "So we don't garbage collect the matrix: ~a\n" matrix))
-	    (log-debug (format "So we don't garbage collect the record: ~a\n" blank))
-	    (let [(deleted (flatten
-			     (for/list [(i (in-naturals))
-					(bcol (in-vector record))]
-				       (for/fold
-					 [(deleted '())]
-					 [(j (in-naturals))
-					  (col (in-vector bcol))]
-					 (if (> col 0)
-					   (cons (vector i j col)
-						 deleted)
-					   deleted)))))]
-	      (values cleaned deleted))))))))
+(define (eliminate matrix)
+      (let* [(width (vector-length matrix))
+	     (height (vector-length (vector-ref matrix 0)))
+	     (cmatrix (unsafe-new-matrix width height))]
+	(for [(i (in-range width))]
+	     (for [(j (in-range height))]
+		  (unsafe-write-matrix i j (matrix-ref matrix i j) cmatrix)))
+	(let* [(crecord (unsafe-eliminate width height cmatrix))
+	     (cleaned (build-vector width
+			(lambda (i)
+			  (build-vector height
+			    (lambda (j)
+			      (unsafe-read-matrix i j cmatrix))))))
+	     (deleted
+	       (flatten
+		 (for/list [(i (in-range width))]
+			   (for/fold 
+			     [(gone '())]
+			     [(j (in-range height))]
+			     (let [(clr (unsafe-read-matrix i j crecord))]
+			       (if (unsafe-fx> clr 0)
+				 (cons (vector i j clr)
+				       gone)
+				 gone))))))]
+	(unsafe-free-matrix width cmatrix)
+	(unsafe-free-matrix width crecord)
+	(values cleaned deleted)))
+				     
