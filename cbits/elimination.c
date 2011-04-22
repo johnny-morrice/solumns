@@ -158,20 +158,20 @@ fatal_out_of_memory()
 }
 
 // Read from matrix (outdoor use only)
-#if defined (__WINDOWS__)
-__declspec(dllexport)
+#if defined (__MINGW32__)
+__stdcall
 #endif
-void
+unsigned char
 read_matrix(const unsigned char x,
 		const unsigned char y,
 		unsigned char ** const matrix)
 {
-	matrix[x][y];
+	return matrix[x][y];
 }
 
 // Write to matrix (outdoor use only)
-#if defined (__WINDOWS__)
-__declspec(dllexport)
+#if defined (__MINGW32__)
+__stdcall
 #endif
 void
 write_matrix(const unsigned char x,
@@ -184,8 +184,8 @@ write_matrix(const unsigned char x,
 
 
 // Create a new matrix
-#if defined (__WINDOWS__)
-__declspec(dllexport)
+#if defined (__MINGW32__)
+__stdcall
 #endif
 unsigned char **
 new_matrix(const unsigned char width,
@@ -219,8 +219,8 @@ new_matrix(const unsigned char width,
 // Perform the elimination step
 // Update the second array
 // with a the colour of each cell that was deleted.
-#if defined (__WINDOWS__)
-__declspec(dllexport)
+#if defined (__MINGW32__)
+__stdcall
 #endif
 unsigned char **
 elimination_step(const unsigned char width,

@@ -42,6 +42,7 @@
 	       eliminator-lib
 	       (_fun _uint8
 		     _uint8
+		     _pointer
 		     -> _pointer)))
 
 ; Free a cmatrix, given its width
@@ -49,6 +50,7 @@
   (get-ffi-obj "free_matrix"
 	       eliminator-lib
 	       (_fun _uint8
+		     _pointer
 		     -> _void)))
 
 ; Create a new matrix given width and height
@@ -63,7 +65,7 @@
 (define unsafe-write-matrix
   (get-ffi-obj "write_matrix"
 	       eliminator-lib
-	       (fun _uint8
+	       (_fun _uint8
 		    _uint8
 		    _uint8
 		    _pointer
@@ -73,7 +75,7 @@
 (define unsafe-read-matrix
   (get-ffi-obj "read_matrix"
 	       eliminator-lib
-	       (fun _uint8
+	       (_fun _uint8
 		    _uint8
 		    _pointer
 		    -> _uint8)))

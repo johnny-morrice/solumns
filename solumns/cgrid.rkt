@@ -29,12 +29,10 @@
 
 	 (override elimination-step)
 
-	 (field [elim (eliminator (get-field width this) (get-field height this))])
-
 	 (define (elimination-step)
 	   (call-with-values
 	     (lambda ()
-	       (elim (get-field matrix this)))
+	       (eliminate (get-field matrix this)))
 	     (lambda (new-matrix deleted)
 	       (set-field! matrix this new-matrix)
 	       deleted)))))

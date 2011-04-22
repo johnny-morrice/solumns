@@ -48,7 +48,7 @@
 			(let [(h (send g clone))]
 			  (check-equal? (send g all-colours)
 					(send h all-colours))
-			  (send h add-column 0 3 '(1 2 1))
+			  (send h add-column 0 3 '#(1 2 1))
 			  (check-false (equal? (send g all-colours)
 					       (send h all-colours)))))))
 
@@ -72,11 +72,10 @@
 
 (test-case "Elimination in C"
 	   (with-grid (lambda (g)
-			(let* [(matrix (get-field matrix g))
-			       (elim (eliminator (vector-length matrix) (vector-length (vector-ref matrix 0))))]
+			(let* [(matrix (get-field matrix g))]
 			  (call-with-values
 			    (lambda ()
-			      (elim matrix))
+			      (eliminate matrix))
 			    (lambda (new-matrix eliminated)
 			      (when (not eliminated)
 				(log-error "ERROR: elimination did not succeed!"))
