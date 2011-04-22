@@ -182,6 +182,7 @@ task :wix => [:build, :dist] do
 	if windows?
 		FileUtils.cp "windows/installer/solumns.wxs", "release"
 		FileUtils.cp "windows/installer/COPYING.rtf", "release"
+		FileUtils.cp "lib/elimination.dll", "release/lib"
 		sh "windows/create-installer.bat"
 	else
 		raise "Only works on windows"

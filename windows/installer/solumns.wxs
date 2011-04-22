@@ -3,7 +3,7 @@
 
 	<Product Name='Solumns' Id='0cc370ae-402a-4670-b5b0-b44d0b13f067'
 		UpgradeCode='0cc370ae-402a-4670-b5b0-b44d0b13f067'
-		Language='1033' Codepage='1252' Version='0.0.2' Manufacturer='killersmurf.com'>
+		Language='1033' Codepage='1252' Version='0.1.0' Manufacturer='killersmurf.com'>
 
 		<Package Id='*' Keywords='Installer' Description="Solumns Installer"
 			Comments='Copyright 2011 John Morrice' Manufacturer='killersmurf.com'
@@ -49,6 +49,14 @@
 
 						<Directory Id="lib" Name="lib">
 
+							<Component Id="EliminationLib" Guid='2596393e-60ff-4bba-ae61-1b77f8fc7c63'>
+
+								<File Id="EliminationDLL" Name="elimination.dll" DiskId='1'
+									Source="lib\elimination.dll" KeyPath="yes">
+								</File>
+
+							</Component>
+
 							<Component Id='IConv' Guid='f87e6c76-f981-48f2-8c53-3ed868ff5ede'>
 
 								<File Id='IConvDLL' Name='iconv.dll' DiskId='1'
@@ -59,15 +67,15 @@
 
 							<Component Id='GracketGC' Guid='a96b375c-2e4a-4396-a57a-4592bb69bcdd'>
 
-								<File Id='GracketGCDLL' Name='libgracket3m_89or8o.dll' DiskId='1'
-									Source='lib\libgracket3m_89or8o.dll' KeyPath='yes'>
+								<File Id='GracketGCDLL' Name='libgracket3m_89os0g.dll' DiskId='1'
+									Source='lib\libgracket3m_89os0g.dll' KeyPath='yes'>
 								</File>
 							</Component>
 
 							<Component Id='RacketGC' Guid='ebd5803c-2418-4f5d-89cb-3b32f8033822'>
 
-								<File Id='RacketGCDLL' Name='libracket3m_89or8o.dll' DiskId='1'
-									Source='lib\libracket3m_89or8o.dll' KeyPath='yes'>
+								<File Id='RacketGCDLL' Name='libracket3m_89os0g.dll' DiskId='1'
+									Source='lib\libracket3m_89os0g.dll' KeyPath='yes'>
 								</File>
 							</Component>
 
