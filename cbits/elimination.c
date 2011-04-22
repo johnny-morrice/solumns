@@ -222,4 +222,12 @@ elimination_step(const unsigned char width,
 		}
 	}
 
+	// Free the tag
+	for (i = 0; i < width; i++)
+	{
+		free(tag[i]);
+	}
+
+	free(tag);
+
 }
