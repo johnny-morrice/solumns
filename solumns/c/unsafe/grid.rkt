@@ -19,6 +19,10 @@
 ;
 (require ffi/unsafe)
 
+; This API may look a bit convoluted, bit the hope is
+; that by not boxing C pointers into Racket vectors
+; that memory errors can be avoided
+
 (provide unsafe-eliminate
 	 unsafe-new-matrix
 	 unsafe-free-matrix
