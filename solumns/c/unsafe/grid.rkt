@@ -26,8 +26,9 @@
 (provide unsafe-eliminate
 	 unsafe-new-matrix
 	 unsafe-free-matrix
-	 unsafe-read-matrix
-	 unsafe-write-matrix)
+	 unsafe-get-column
+	 unsafe-read-colour
+	 unsafe-write-colour)
 
 (define eliminator-path
   (let [(local-lib "lib/elimination")]
@@ -65,22 +66,14 @@
 		     _uint8
 		     -> _pointer)))
 
-; Write to the matrix
-(define unsafe-write-matrix
-  (get-ffi-obj "write_matrix"
-	       eliminator-lib
-	       (_fun _uint8
-		    _uint8
-		    _uint8
-		    _pointer
-		    -> _void)))
+; Write a colour to a column
+(define (unsafe-write-colour col y val)
+    (ptr-set! col _uint8 y val))
 
-; Read from the matrix
-(define unsafe-read-matrix
-  (get-ffi-obj "read_matrix"
-	       eliminator-lib
-	       (_fun _uint8
-		    _uint8
-		    _pointer
-		    -> _uint8)))
+; Get a colour from a column
+(define (unsafe-read-colour col y)
+    (ptr-ref col _uint8 y))
 
+; Get a column from the matrix
+(define (unsafe-get-column matrix x)
+  (ptr-ref matrix _pointer x))

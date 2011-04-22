@@ -134,6 +134,9 @@ tag_cell(const unsigned char colour,
 }
 
 // Free a matrix
+#if defined (__WINDOWS__)
+__declspec(dllexport)
+#endif
 void
 free_matrix(unsigned char width, unsigned char ** matrix)
 {
@@ -158,8 +161,8 @@ fatal_out_of_memory()
 }
 
 // Read from matrix (outdoor use only)
-#if defined (__MINGW32__)
-__stdcall
+#if defined (__WINDOWS__)
+__declspec(dllexport)
 #endif
 unsigned char
 read_matrix(const unsigned char x,
@@ -170,8 +173,8 @@ read_matrix(const unsigned char x,
 }
 
 // Write to matrix (outdoor use only)
-#if defined (__MINGW32__)
-__stdcall
+#if defined (__WINDOWS__)
+__declspec(dllexport)
 #endif
 void
 write_matrix(const unsigned char x,
@@ -184,8 +187,8 @@ write_matrix(const unsigned char x,
 
 
 // Create a new matrix
-#if defined (__MINGW32__)
-__stdcall
+#if defined (__WINDOWS__)
+__declspec(dllexport)
 #endif
 unsigned char **
 new_matrix(const unsigned char width,
@@ -219,8 +222,8 @@ new_matrix(const unsigned char width,
 // Perform the elimination step
 // Update the second array
 // with a the colour of each cell that was deleted.
-#if defined (__MINGW32__)
-__stdcall
+#if defined (__WINDOWS__)
+__declspec(dllexport)
 #endif
 unsigned char **
 elimination_step(const unsigned char width,

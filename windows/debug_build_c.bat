@@ -1,1 +1,1 @@
-gcc -o lib/elimination.dll -g -shared cbits/elimination.c
+gcc -o lib/elimination.dll -g -DWINDOWS -shared cbits/elimination.c

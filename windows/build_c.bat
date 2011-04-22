@@ -1,1 +1,1 @@
-gcc -o lib/elimination.dll -O2 -shared cbits/elimination.c
+gcc -o lib/elimination.dll -DWINDOWS -O3 -fomit-frame-pointer -shared cbits/elimination.c

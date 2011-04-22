@@ -32,25 +32,29 @@
 	 (height (vector-length (vector-ref matrix 0)))
 	 (cmatrix (unsafe-new-matrix width height))]
     (for [(i (in-range width))]
-	 (for [(j (in-range height))]
-	      (unsafe-write-matrix i j (vector-ref (vector-ref matrix i) j) cmatrix)))
+	 (let [(ccol (unsafe-get-column cmatrix i))
+	       (rcol (vector-ref matrix i))]
+	   (for [(j (in-range height))]
+		(unsafe-write-colour ccol j (vector-ref rcol j)))))
     (let* [(crecord (unsafe-eliminate width height cmatrix))
 	   (cleaned (build-vector width
 				  (lambda (i)
 				    (build-vector height
-						  (lambda (j)
-						    (unsafe-read-matrix i j cmatrix))))))
+						  (let [(ccol (unsafe-get-column cmatrix i))]
+						    (lambda (j)
+						      (unsafe-read-colour ccol j)))))))
 	   (deleted
 	     (flatten
 	       (for/list [(i (in-range width))]
-			 (for/fold 
-			   [(gone '())]
-			   [(j (in-range height))]
-			   (let [(clr (unsafe-read-matrix i j crecord))]
-			     (if (unsafe-fx> clr 0)
-			       (cons (vector i j clr)
-				     gone)
-			       gone))))))]
+			 (let [(ccol (unsafe-get-column crecord i))]
+			   (for/fold 
+			     [(gone '())]
+			     [(j (in-range height))]
+			     (let [(clr (unsafe-read-colour ccol j))]
+			       (if (unsafe-fx> clr 0)
+				 (cons (vector i j clr)
+				       gone)
+				 gone)))))))]
       (unsafe-free-matrix width cmatrix)
       (unsafe-free-matrix width crecord)
       (values cleaned deleted))))
