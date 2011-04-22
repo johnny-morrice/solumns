@@ -160,32 +160,6 @@ fatal_out_of_memory()
 	exit(EXIT_FAILURE);
 }
 
-// Read from matrix (outdoor use only)
-#if defined (__WINDOWS__)
-__declspec(dllexport)
-#endif
-unsigned char
-read_matrix(const unsigned char x,
-		const unsigned char y,
-		unsigned char ** const matrix)
-{
-	return matrix[x][y];
-}
-
-// Write to matrix (outdoor use only)
-#if defined (__WINDOWS__)
-__declspec(dllexport)
-#endif
-void
-write_matrix(const unsigned char x,
-		const unsigned char y,
-		const unsigned char val,
-		unsigned char ** const matrix)
-{
-	matrix[x][y] = val;
-}
-
-
 // Create a new matrix
 #if defined (__WINDOWS__)
 __declspec(dllexport)
