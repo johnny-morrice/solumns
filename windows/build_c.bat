@@ -1,3 +1,3 @@
-cl /Tc cbits\elimination.c /O2 /LD
+cl /Tc cbits\elimination.c /O2 /LD /D__WINDOWS__
 move elimination.dll lib\elimination.dll
-del elimination.obj
+move elimination.obj lib\elimination.obj

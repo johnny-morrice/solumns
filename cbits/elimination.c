@@ -136,6 +136,9 @@ tag_cell(const unsigned char colour,
 // Perform the elimination step
 // Update the second array
 // with a the colour of each cell that was deleted.
+#if defined (__WINDOWS__)
+__declspec(dllexport)
+#endif
 void
 elimination_step(const unsigned char width,
 		const unsigned char height,

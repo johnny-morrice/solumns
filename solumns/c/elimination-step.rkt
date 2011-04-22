@@ -36,6 +36,8 @@
 	(call-with-values
 	  (lambda ()
 	    (celim width height matrix blank))
+	  (log-debug "So we don't garbage collect the matrix: ~a\n" matrix)
+	  (log-debug "So we don't garbage collect the blank: ~a\n" blank)
 	  (lambda (cleaned record)
 	    (let [(deleted (flatten
 			     (for/list [(i (in-naturals))

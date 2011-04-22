@@ -195,9 +195,17 @@ end
 desc "Build the C libray."
 task :build_c => ["work", "lib"] do
 	if windows?
-		sh "windows/build_c.bat"
+		if ENV["DEBUG"]
+			sh "windows/debug_build_c.bat"
+		else
+			sh "windows/build_c.bat"
+		end
 	else
-		sh "gcc -std=c99 -shared -Wall -fPIC -o lib/elimination.so cbits/elimination.c"
+		flags = "-std=c99 -shared -Wall -fPIC"
+		if ENV["DEBUG"]
+			flags += " -g"
+		end
+		sh "gcc #{flags} -o lib/elimination.so cbits/elimination.c"
 	end
 
 end
