@@ -125,6 +125,7 @@
 			<ComponentRef Id='GracketGC' />
 			<ComponentRef Id='RacketGC' />
 			<ComponentRef Id='UnicoWS' />
+			<ComponentRef Id='EliminationLib' />
 		</Feature>
 
 		<Property Id="WIXUI_INSTALLDIR" Value='INSTALLDIR'>
