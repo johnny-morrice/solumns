@@ -45,6 +45,14 @@
 
 							</Component>
 
+							<Component Id='FrameIcon' Guid='d7c38451-823c-47b1-ae1d-ac2e10eda048'>
+
+								<File Id='SolumnsFrameIcon' Name='solumns-frame-icon.png' DiskId='1'
+									Source='data\solumns-frame-icon.png' KeyPath='yes'>
+								</File>
+
+							</Component>
+
 						</Directory>
 
 						<Directory Id="lib" Name="lib">
@@ -126,6 +134,7 @@
 			<ComponentRef Id='RacketGC' />
 			<ComponentRef Id='UnicoWS' />
 			<ComponentRef Id='EliminationLib' />
+			<ComponentRef Id='FrameIcon' />
 		</Feature>
 
 		<Property Id="WIXUI_INSTALLDIR" Value='INSTALLDIR'>
