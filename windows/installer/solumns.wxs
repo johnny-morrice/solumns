@@ -3,7 +3,7 @@
 
 	<Product Name='Solumns' Id='0cc370ae-402a-4670-b5b0-b44d0b13f067'
 		UpgradeCode='0cc370ae-402a-4670-b5b0-b44d0b13f067'
-		Language='1033' Codepage='1252' Version='0.1.0' Manufacturer='killersmurf.com'>
+		Language='1033' Codepage='1252' Version='0.1.1' Manufacturer='killersmurf.com'>
 
 		<Package Id='*' Keywords='Installer' Description="Solumns Installer"
 			Comments='Copyright 2011 John Morrice' Manufacturer='killersmurf.com'
