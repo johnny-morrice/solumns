@@ -69,8 +69,8 @@
   (define hoz
     (new horizontal-panel%
 	 [parent win]
-	 [min-width (max win-width (send win get-width))]
-	 [min-height (max win-height (send win get-height))]
+	 [min-width win-width]
+	 [min-height win-height]
 	 [stretchable-width #f]
 	 [stretchable-height #f]))
 
