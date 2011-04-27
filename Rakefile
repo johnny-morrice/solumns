@@ -1,4 +1,13 @@
 require "fileutils"
+require "erb"
+require "time"
+
+def template_io ipath, opath, bind
+	template = ERB.new File.read ipath
+	f = File.new opath, "w"
+	f.write template.result bind
+	f.close
+end
 
 def run cmd
 	if windows?
@@ -191,6 +200,7 @@ end
 
 file "lib" do
 	FileUtils.mkdir "lib"
+	FileUtils.mkdir "lib/solumns"
 end
 
 desc "Build the C libray."
@@ -202,11 +212,13 @@ task :build_c => ["work", "lib"] do
 			sh "windows/build_c.bat"
 		end
 	else
-		flags = "-std=c99 -shared -Wall -fPIC"
+		flags = "-std=c99 -shared -Wall -fPIC "
 		if ENV["DEBUG"]
-			flags += " -g"
+			flags += "-g"
+		else
+			flags += "-O3"
 		end
-		sh "gcc #{flags} -o lib/elimination.so cbits/elimination.c"
+		sh "gcc #{flags} -o lib/solumns/elimination.so cbits/elimination.c"
 	end
 
 end
@@ -220,19 +232,19 @@ task :build => ["work", :build_c] do
 end
 
 def udeb_usage_message
-	"rake dh_make VERSION=x.y-z"
+	"rake udeb VERSION=x.y-z"
 end
 
 def udeb_usage_error
-	raise udeb_usage_message
+	raise "USAGE: #{udeb_usage_message}"
 end
 
 desc "Build ubuntu .deb package.  #{udeb_usage_message}"
 task :udeb => [:clean, :build, :dist] do
-	ver = ENV["VERSION"]
-	if ver
-		if ver =~ /^(\d+)\.(\d+)-(\d+)$/
-			deb_name = "solumns-#{ver}"
+	version = ENV["VERSION"]
+	if version
+		if version =~ /^(\d+)\.(\d+)-(\d+)$/
+			deb_name = "solumns_#{version}"
 			package_path = "release/ubuntu/#{deb_name}"
 			fs_path = "#{package_path}/usr/"
 			share_path = "#{fs_path}/share/"
@@ -246,26 +258,34 @@ task :udeb => [:clean, :build, :dist] do
 			games_path = "#{fs_path}/games/"
 			FileUtils.mkdir_p package_path
 			FileUtils.mkdir_p share_path
-			FileUtils.mkdir_p  debian_path
+			FileUtils.mkdir_p debian_path
 			FileUtils.mkdir_p logo_path
 			FileUtils.mkdir_p icon_path
 			FileUtils.mkdir_p pixmap_path
 			FileUtils.mkdir_p doc_path
 			FileUtils.mkdir_p menu_path
 			FileUtils.mkdir_p desktop_path
-			FileUtils.mkdir_p games_path
+			FileUtils.mkdir_p games_path 
 			FileUtils.cp "release/bin/solumns", games_path
 			FileUtils.cp_r "release/lib", fs_path
+			FileUtils.cp_r "lib/solumns", "#{fs_path}/lib/"
 			FileUtils.cp "data/logo.png", logo_path
+			FileUtils.cp "data/solumns-frame-icon.png", logo_path
 			FileUtils.cp_r "data/hicolor", icon_path
 			FileUtils.cp "data/solumns.xpm", pixmap_path
-			FileUtils.cp "ubuntu/control", debian_path
 			FileUtils.cp "ubuntu/postinst", debian_path
 			FileUtils.cp "ubuntu/postrm", debian_path
-			FileUtils.cp "ubuntu/copyright", doc_path
 			FileUtils.cp "ubuntu/menu", "#{menu_path}/solumns"
 			FileUtils.cp "ubuntu/solumns.desktop", desktop_path
-			FileUtils.cp "ubuntu/build-package.sh", "release/ubuntu"
+
+			bind = binding
+
+			template_io "ubuntu/build-package.sh.erb", "release/ubuntu/build-package.sh", bind
+			template_io "ubuntu/control.erb", "#{debian_path}/control", bind
+			template_io "ubuntu/copyright.erb", "#{debian_path}/copyright", bind
+
+			FileUtils.chmod 0744, "release/ubuntu/build-package.sh"
+
 			sh "cd release/ubuntu && fakeroot ./build-package.sh"
 		else
 			udeb_usage_error

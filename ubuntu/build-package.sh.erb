@@ -1,0 +1,5 @@
+#! /bin/bash
+
+# Should be run as fakeroot
+chown -R root:root solumns_<%= version %> && \
+dpkg-deb --build solumns_<%= version %>

@@ -31,11 +31,11 @@
 	 unsafe-write-colour)
 
 (define eliminator-path
-  (let [(local-lib "lib/elimination")]
+  (let [(local-lib "lib/solumns/elimination")]
     (if (or (file-exists? (string-append local-lib ".so"))
 	    (file-exists? (string-append local-lib ".dll")))
       local-lib
-      (build-path (find-system-path 'run-file) ".." "lib/elimination"))))
+      (build-path (path-only (find-system-path 'run-file)) ".." local-lib))))
 
 ; The shared object providing the elimination-step function
 (define eliminator-lib
