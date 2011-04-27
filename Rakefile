@@ -201,9 +201,11 @@ task :build_c => ["work", "lib"] do
 			sh "windows/build_c.bat"
 		end
 	else
-		flags = "-std=c99 -shared -Wall -fPIC"
+		flags = "-std=c99 -shared -Wall -fPIC "
 		if ENV["DEBUG"]
-			flags += " -g"
+			flags += "-g"
+		else
+			flags += "-O3"
 		end
 		sh "gcc #{flags} -o lib/elimination.so cbits/elimination.c"
 	end
