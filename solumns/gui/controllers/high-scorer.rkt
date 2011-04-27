@@ -19,6 +19,7 @@
 
 (require "../high-score-viewer.rkt"
 	 "../high-scores.rkt"
+	 "../frame.rkt"
 	 "scorer.rkt")
 
 (provide high-score-controller%)
@@ -29,7 +30,7 @@
 ; that tells us if it dies, that is after the 
 ; high scores have been saved
 (define score-frame%
-  (class frame%
+  (class solumns-frame%
 	 (super-new)
 
 	 (augment on-close)
