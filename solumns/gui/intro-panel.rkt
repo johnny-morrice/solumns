@@ -94,7 +94,7 @@
 
   (new message%
        [parent intro-panel]
-       [label "Not quite: most of the time, Solumns will give you evil combinations of colours."])
+       [label "Most of the time, Solumns will give you evil combinations of colours."])
 
   ; Panel for legal and tech info
   (define tech-panel
@@ -108,11 +108,11 @@
 
   (new message%
        [parent tech-panel]
-       [label "This is an alpha release of solumns."])
+       [label "This is an beta release."])
 
   (new message%
        [parent tech-panel]
-       [label "Your Mileage May Vary"])
+       [label "You may find it lumpy."])
 
   (new message%
        [parent tech-panel]
