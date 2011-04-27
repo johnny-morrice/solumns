@@ -21,6 +21,7 @@
 	 "high-scores.rkt"
 	 "high-score-viewer.rkt"
 	 "frame.rkt"
+	 "../version.rkt"
 	 net/sendurl)
 
 ; Provide intro panel
@@ -53,7 +54,7 @@
        [stretchable-width #f]
        [stretchable-height #f]
        [paint-callback (lambda (me dc)
-			 (let [(ellipse-width 228)]
+			 (let [(ellipse-width 268)]
 			   (send dc set-brush "white" 'opaque)
 			   (send dc draw-ellipse (my-left ellipse-width win) 0 ellipse-width 156)
 			   (send dc draw-bitmap logo (my-left 128 win) 15)))])
@@ -108,7 +109,7 @@
 
   (new message%
        [parent tech-panel]
-       [label "This is an beta release."])
+       [label (string-append "This is Solumns " solumns-version ", a beta release.")])
 
   (new message%
        [parent tech-panel]
@@ -156,5 +157,6 @@
 					 [parent score-win]
 					 [scores (top-ten (get-high-scores))]))]
 	     (send high-score-panel display-scores)
-	     (send score-win show #t)))]))
+	     (send score-win show #t)))])
+  (void))
 
