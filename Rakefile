@@ -296,11 +296,6 @@ task :udeb => [:clean, :build, :dist] do
 	end
 end
 
-desc "CRASH - current bug"
-task :crash do
-	sh "racket profile/crash.rkt"
-end
-
 desc "Wordcount"
 task :words do
 	run "wc `find -regex '.+.rkt'` | sort -n"

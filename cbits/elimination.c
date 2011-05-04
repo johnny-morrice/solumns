@@ -29,7 +29,7 @@
 #include <stdio.h>
 
 // Find minimum, given a scalar element of grid position
-unsigned char minimum(unsigned char n)
+unsigned int minimum(unsigned int n)
 {
 	if (n == 0)
 	{
@@ -42,7 +42,7 @@ unsigned char minimum(unsigned char n)
 }
 
 // Find maximum, given a scalar element of grid position and a boundry such that bound > n
-unsigned char maximum(unsigned char n, unsigned char bound)
+unsigned int maximum(unsigned int n, unsigned int bound)
 {
 	if (n == bound - 1)
 	{
@@ -59,22 +59,22 @@ unsigned char maximum(unsigned char n, unsigned char bound)
 // Mark it as deleted in the record
 void
 mark_delete(const unsigned char colour,
-		const unsigned char x,
-		const unsigned char y,
-		const unsigned char width,
-		const unsigned char height,
+		const unsigned int x,
+		const unsigned int y,
+		const unsigned int width,
+		const unsigned int height,
 		unsigned char ** const grid,
 		unsigned char ** const tag,
 		unsigned char ** const record)
 {
 	// Iterative variables for exploring nearby cells
-	unsigned char i, j;
+	unsigned int i, j;
 	// Min and max in x direction
-	const unsigned char min_i = minimum(x);
-	const unsigned char max_i = maximum(x, width);
+	const unsigned int min_i = minimum(x);
+	const unsigned int max_i = maximum(x, width);
 	// Min and max in y direction
-	const unsigned char min_j = minimum(y);
-	const unsigned char max_j = maximum(y, height);
+	const unsigned int min_j = minimum(y);
+	const unsigned int max_j = maximum(y, height);
 
 	// Iterate through nearby cells
 	for (i = min_i; i <= max_i; i++)
@@ -96,21 +96,21 @@ mark_delete(const unsigned char colour,
 // update the record if the cell has two or more neighbours of its colour
 void
 tag_cell(const unsigned char colour,
-		const unsigned char x,
-		const unsigned char y,
-		const unsigned char width,
-		const unsigned char height,
+		const unsigned int x,
+		const unsigned int y,
+		const unsigned int width,
+		const unsigned int height,
 		unsigned char ** const grid,
 		unsigned char ** const tag)
 {
 	// Iterative variables for exploring nearby cells
-	unsigned char i, j;
+	unsigned int i, j;
 	// Min and max in x direction
-	const unsigned char min_i = minimum(x);
-	const unsigned char max_i = maximum(x, width);
+	const unsigned int min_i = minimum(x);
+	const unsigned int max_i = maximum(x, width);
 	// Min and max in y direction
-	const unsigned char min_j = minimum(y);
-	const unsigned char max_j = maximum(y, height);
+	const unsigned int min_j = minimum(y);
+	const unsigned int max_j = maximum(y, height);
 
 	// The number of nearby cells of the same colour
 	unsigned char nearby = 0;
@@ -138,10 +138,10 @@ tag_cell(const unsigned char colour,
 __declspec(dllexport)
 #endif
 void
-free_matrix(unsigned char width, unsigned char ** matrix)
+free_matrix(unsigned int width, unsigned char ** matrix)
 {
 	// Iterative variable
-	unsigned char i;
+	unsigned int i;
 
 	// Free the matrix 
 	for (i = 0; i < width; i++)
@@ -165,12 +165,12 @@ fatal_out_of_memory()
 __declspec(dllexport)
 #endif
 unsigned char **
-new_matrix(const unsigned char width,
-		const unsigned char height)
+new_matrix(const unsigned int width,
+		const unsigned int height)
 {
 
 	// Iterative variable
-	unsigned char i;
+	unsigned int i;
 
 	// The new matrix
 	unsigned char ** const matrix = malloc(sizeof(char *) * width);
@@ -200,14 +200,14 @@ new_matrix(const unsigned char width,
 __declspec(dllexport)
 #endif
 unsigned char **
-elimination_step(const unsigned char width,
-		const unsigned char height,
+elimination_step(const unsigned int width,
+		const unsigned int height,
 		unsigned char ** const grid)
 {
 	// Iterative variables for traversing the grid
-	unsigned char i, j;
+	unsigned int i, j;
 	// The colour of the current cell
-	unsigned char cell;
+	unsigned int cell;
 	// Tagging matrix
 	unsigned char ** const tag = new_matrix(width, height);
 	// Record
