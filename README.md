@@ -5,7 +5,7 @@ by performing a bruteforce search for colours that you do not want.
 
 # Inspiration
 
-* Bastet (Bastart Tetrits) http://blahg.res0l.net/2009/01/bastet-bastard-tetris/
+* Bastet (Bastard Tetrits) http://blahg.res0l.net/2009/01/bastet-bastard-tetris/
 * Columns (Classic sega game)
 
 ## Credits
