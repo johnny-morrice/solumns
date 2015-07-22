@@ -32,8 +32,8 @@ following platforms:
 
 If you just want to play Solumns, it is easiest to execute
 
-> $ rake run
+    $ rake run
 
 There are a whole load of options available however, see
 
-> $ rake -T
+    $ rake -T
